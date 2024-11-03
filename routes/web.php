@@ -19,7 +19,7 @@ Route::get('/', function () {
 Route::resource('home', HomeController::class);
 Route::resource('biography', BiographyController::class);
 Route::resource('business', BusinessController::class);
-Route::resource('business-category', BusinessCategoryController::class)->names('businessCategory');
+Route::resource('business-category', BusinessCategoryController::class);
 Route::resource('award', AwardController::class);
 Route::resource('award-category', AwardCategoryController::class);
 Route::resource('blog', BlogController::class);

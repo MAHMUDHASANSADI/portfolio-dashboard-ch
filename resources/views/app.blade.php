@@ -60,15 +60,16 @@
             <div class="list-group list-group-flush">
                 <a href="{{ route('home.index') }}" class="list-group-item list-group-item-action">Home</a>
                 <a href="{{ route('biography.index') }}" class="list-group-item list-group-item-action">Biography</a>
-                <a href="#" class="list-group-item list-group-item-action">Business Category</a>
+                <a href="{{route('business-category.index')}}" class="list-group-item list-group-item-action">Business Category</a>
                 <a href="{{ route('business.index') }}" class="list-group-item list-group-item-action" >Business</a>
-                
-                <a href="#awardSubmenu" class="list-group-item list-group-item-action" data-bs-toggle="collapse">Award & Honor</a>
+                <a href="{{route('award-category.index')}}" class="list-group-item list-group-item-action">Award Category</a>
+
+                <a href="{{route('award.index')}}" class="list-group-item list-group-item-action" data-bs-toggle="collapse">Award & Honor</a>
                 <div class="collapse" id="awardSubmenu">
-                    <a href="{{ route('award-category.index') }}" class="list-group-item list-group-item-action ms-4">Award</a>
-                    <a href="{{ route('award-category.index') }}" class="list-group-item list-group-item-action ms-4">Achievement</a>
-                    <a href="{{ route('award-category.index') }}" class="list-group-item list-group-item-action ms-4">Honorary Degree</a>
-                    <a href="{{ route('award-category.index') }}" class="list-group-item list-group-item-action ms-4">Experiences</a>
+                    <a href="#" class="list-group-item list-group-item-action ms-4">Achievement</a>
+                    <a href="#" class="list-group-item list-group-item-action ms-4">Honorary Degree</a>
+                    <a href="#" class="list-group-item list-group-item-action ms-4">Experiences</a>
+                    <a href="#" class="list-group-item list-group-item-action ms-4">Award</a>
                 </div>
                 <a href="{{ route('blog.index') }}" class="list-group-item list-group-item-action">Blog</a>
                 <a href="{{ route('video.index') }}" class="list-group-item list-group-item-action">Video</a>
