@@ -19,9 +19,9 @@ Route::get('/', function () {
 Route::resource('home', HomeController::class);
 Route::resource('biography', BiographyController::class);
 Route::resource('business', BusinessController::class);
-Route::resource('business-category', BusinessCategoryController::class);
+Route::resource('business_category', BusinessCategoryController::class);
 Route::resource('award', AwardController::class);
-Route::resource('award-category', AwardCategoryController::class);
+Route::resource('award_category', AwardCategoryController::class);
 Route::resource('blog', BlogController::class);
 Route::resource('video', VideoController::class);
 

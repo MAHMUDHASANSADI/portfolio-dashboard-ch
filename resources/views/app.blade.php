@@ -60,9 +60,9 @@
             <div class="list-group list-group-flush">
                 <a href="{{ route('home.index') }}" class="list-group-item list-group-item-action">Home</a>
                 <a href="{{ route('biography.index') }}" class="list-group-item list-group-item-action">Biography</a>
-                <a href="{{route('business-category.index')}}" class="list-group-item list-group-item-action">Business Category</a>
+                <a href="{{route('business_category.index')}}" class="list-group-item list-group-item-action">Business Category</a>
                 <a href="{{ route('business.index') }}" class="list-group-item list-group-item-action" >Business</a>
-                <a href="{{route('award-category.index')}}" class="list-group-item list-group-item-action">Award Category</a>
+                <a href="{{route('award_category.index')}}" class="list-group-item list-group-item-action">Award Category</a>
 
                 <a href="{{route('award.index')}}" class="list-group-item list-group-item-action" data-bs-toggle="collapse">Award & Honor</a>
                 <div class="collapse" id="awardSubmenu">
