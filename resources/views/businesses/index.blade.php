@@ -14,6 +14,7 @@
         <thead>
             <tr>
                 <th>ID</th>
+                <th>Category</th>
                 <th>Name</th>
                 <th>Description</th>
                 <th>Actions</th>
@@ -23,6 +24,7 @@
             @foreach($businesses as $business)
                 <tr>
                     <td>{{ $business->id }}</td>
+                    <td>{{ $business->category}}</td>
                     <td>{{ $business->name }}</td>
                     <td>{{ $business->description }}</td>
                     <td>

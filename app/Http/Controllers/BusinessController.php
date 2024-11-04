@@ -34,6 +34,7 @@ class BusinessController extends Controller
         ]);
 
         Business::create([
+            'category'=>$request->category,
             'name' => $request->name,
             'description' => $request->description,
         ]);
@@ -74,6 +75,7 @@ class BusinessController extends Controller
 
         $business = Business::findOrFail($id); // Find business by ID
         $business->update([
+            'category'=>$request->category,
             'name' => $request->name,
             'description' => $request->description,
         ]);
