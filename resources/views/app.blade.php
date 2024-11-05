@@ -57,22 +57,28 @@
         <!-- Sidebar -->
         <div class="bg-dark border-right" id="sidebar-wrapper">
             <div class="sidebar-heading">
-                <img src="{{ asset('/storage/blog_images/chairman.png') }}" alt="" style="width: 220px; height: 80px;">
+                <img src="{{ asset('/storage/blog_images/chairman.png') }}" alt="" style="width: 220px; height: 50px;">
             </div>
             <div class="list-group list-group-flush">
-                <a href="{{ route('home.index') }}" class="list-group-item list-group-item-action">Home</a>
+                <a href="{{ route('home.index') }}" class="list-group-item list-group-item-action" data-bs-toggle="collapse" data-bs-target="#homeSubmenu" aria-expanded="false">
+                        Home
+                </a>                 <!-- Dropdown Submenu -->
+                    <div class="collapse" id="homeSubmenu">
+                        <div class="list-group">
+                            <a href="" class="list-group-item list-group-item-action ms-3">Slider</a>
+                            <a href="" class="list-group-item list-group-item-action ms-3">Hero</a>
+                            <a href="" class="list-group-item list-group-item-action ms-3">Programs</a>
+                            <a href="" class="list-group-item list-group-item-action ms-3">Gallery</a>
+                            <a href="" class="list-group-item list-group-item-action ms-3">News</a>
+                        </div>
+                    </div>
                 <a href="{{ route('biography.index') }}" class="list-group-item list-group-item-action">Biography</a>
                 <a href="{{route('business_category.index')}}" class="list-group-item list-group-item-action">Business Category</a>
                 <a href="{{ route('business.index') }}" class="list-group-item list-group-item-action" >Business</a>
                 <a href="{{route('award_category.index')}}" class="list-group-item list-group-item-action">Award Category</a>
 
-                <a href="{{route('award.index')}}" class="list-group-item list-group-item-action" data-bs-toggle="collapse">Award & Honor</a>
-                <div class="collapse" id="awardSubmenu">
-                    <a href="#" class="list-group-item list-group-item-action ms-4">Achievement</a>
-                    <a href="#" class="list-group-item list-group-item-action ms-4">Honorary Degree</a>
-                    <a href="#" class="list-group-item list-group-item-action ms-4">Experiences</a>
-                    <a href="#" class="list-group-item list-group-item-action ms-4">Award</a>
-                </div>
+                <a href="{{route('award.index')}}" class="list-group-item list-group-item-action">Award & Honor</a>
+                
                 <a href="{{ route('blog.index') }}" class="list-group-item list-group-item-action">Blog</a>
                 <a href="{{ route('video.index') }}" class="list-group-item list-group-item-action">Video</a>
             </div>
