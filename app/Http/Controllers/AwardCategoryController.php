@@ -3,62 +3,79 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\AwardCategory;
+
 
 class AwardCategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
-        //
+        return view('award_categories.index', [
+            'categories' => AwardCategory::with([
+                'awards'
+            ])->get()
+        ]); 
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
+    
     public function create()
     {
-        //
+        return view('award_categories.create'); 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+   
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'category_name' => 'required|string|max:255',
+        ]);
+
+        AwardCategory::create([
+            'category_name'=>$request->category_name,
+        ]);
+
+        return redirect()->route('award_category.index')->with('success', 'Award category created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+
+    
+    public function show($id)
     {
-        //
+        $award_category = BusinessCategory::findOrFail($id); // Find business by ID
+        return view('award_categories.show', compact('award_category')); // Pass to view
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+
+
+    public function edit($id)
     {
-        //
+        $award_categories = AwardCategory::findOrFail($id); 
+        return view('award_categories.edit', compact('award_categories')); // Pass to edit form
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+
+
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'category_name' => 'required|string|max:255',
+        ]);
+
+        $award_categories = AwardCategory::findOrFail($id); 
+        $award_categories->update([
+            'category_name'=>$request->category_name,
+        ]);
+
+        return redirect()->route('award_category.index')->with('success', 'Category updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    
+    public function destroy($id)
     {
-        //
+        $award_categories = AwardCategory::findOrFail($id); 
+        $award_categories->delete();
+
+        return redirect()->route('award_category.index')->with('success', 'category deleted successfully.');
     }
+
 }

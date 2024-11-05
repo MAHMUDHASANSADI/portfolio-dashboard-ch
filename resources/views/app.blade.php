@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <title>Portfolio Dashboard</title>
+    <title>Shafiqul Alam's Dashboard</title>
 
     <style>
         /* Custom sidebar styling */
@@ -56,7 +56,9 @@
     <div class="d-flex" id="wrapper">
         <!-- Sidebar -->
         <div class="bg-dark border-right" id="sidebar-wrapper">
-            <div class="sidebar-heading">Shafiqul Alam's Dashboard</div>
+            <div class="sidebar-heading">
+                <img src="{{ asset('/storage/blog_images/chairman.png') }}" alt="" style="width: 220px; height: 80px;">
+            </div>
             <div class="list-group list-group-flush">
                 <a href="{{ route('home.index') }}" class="list-group-item list-group-item-action">Home</a>
                 <a href="{{ route('biography.index') }}" class="list-group-item list-group-item-action">Biography</a>
