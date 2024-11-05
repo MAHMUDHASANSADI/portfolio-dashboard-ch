@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class BusinessCategory extends Model
 {
-    use HasFactory;
-    protected $fillable = ['category_name'];
+    protected $fillable = [
+        'category_name'
+    ];
 
+    function businesses(){
+        return $this->hasMany(Business::class);
+    }
 }

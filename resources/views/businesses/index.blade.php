@@ -24,7 +24,7 @@
             @foreach($businesses as $business)
                 <tr>
                     <td>{{ $business->id }}</td>
-                    <td>{{ $business->category}}</td>
+                    <td>{{ $business->businessCategory->category_name }}</td>
                     <td>{{ $business->name }}</td>
                     <td>{{ $business->description }}</td>
                     <td>

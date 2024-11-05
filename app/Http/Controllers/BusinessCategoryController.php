@@ -11,11 +11,12 @@ class BusinessCategoryController extends Controller
     
     public function index()
     {
-        $business_categories = BusinessCategory::all(); // Fetch all businesses
-        return view('business_categories.index', compact('business_categories')); // Pass to view
+        return view('business_categories.index', [
+            'categories' => BusinessCategory::with([
+                'businesses'
+            ])->get()
+        ]); // Pass to view
     }
-
-
     
     public function create()
     {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Business;
+use \App\Models\BusinessCategory;
 
 
 class BusinessController extends Controller
@@ -11,15 +12,18 @@ class BusinessController extends Controller
     
     public function index()
     {
-        $businesses = Business::all(); // Fetch all businesses
-        return view('businesses.index', compact('businesses')); // Pass to view
+        return view('businesses.index', [
+            'businesses' =>  Business::with([
+                'businessCategory'
+            ])->get()
+        ]);
     }
-
-
     
     public function create()
     {
-        return view('businesses.create'); // Display create form
+        return view('businesses.create', [
+            'categories' => BusinessCategory::all()
+        ]); // Display create form
     }
 
     /**
@@ -29,15 +33,12 @@ class BusinessController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'business_category_id' => 'required',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
 
-        Business::create([
-            'category'=>$request->category,
-            'name' => $request->name,
-            'description' => $request->description,
-        ]);
+        Business::create($request->all());
 
         return redirect()->route('business.index')->with('success', 'Business created successfully.');
     }
@@ -48,8 +49,11 @@ class BusinessController extends Controller
      */
     public function show($id)
     {
-        $business = Business::findOrFail($id); // Find business by ID
-        return view('businesses.show', compact('business')); // Pass to view
+        return view('businesses.show', [
+            'business' => Business::with([
+                'businessCategory'
+            ])->findOrFail($id),
+        ]); // Pass to view
     }
 
 
@@ -58,8 +62,10 @@ class BusinessController extends Controller
      */
     public function edit($id)
     {
-        $business = Business::findOrFail($id); // Find business by ID
-        return view('businesses.edit', compact('business')); // Pass to edit form
+        return view('businesses.edit', [
+            'business' => Business::findOrFail($id),
+            'categories' => BusinessCategory::all()
+        ]); // Pass to edit form
     }
 
 
@@ -69,16 +75,12 @@ class BusinessController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
+            'business_category_id' => 'required',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
 
-        $business = Business::findOrFail($id); // Find business by ID
-        $business->update([
-            'category'=>$request->category,
-            'name' => $request->name,
-            'description' => $request->description,
-        ]);
+        $business = Business::findOrFail($id)->update($request->all()); // Find business by ID
 
         return redirect()->route('business.index')->with('success', 'Business updated successfully.');
     }

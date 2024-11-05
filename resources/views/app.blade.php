@@ -56,7 +56,7 @@
     <div class="d-flex" id="wrapper">
         <!-- Sidebar -->
         <div class="bg-dark border-right" id="sidebar-wrapper">
-            <div class="sidebar-heading">Portfolio Dashboard</div>
+            <div class="sidebar-heading">Shafiqul Alam's Dashboard</div>
             <div class="list-group list-group-flush">
                 <a href="{{ route('home.index') }}" class="list-group-item list-group-item-action">Home</a>
                 <a href="{{ route('biography.index') }}" class="list-group-item list-group-item-action">Biography</a>

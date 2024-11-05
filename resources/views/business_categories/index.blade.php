@@ -15,17 +15,21 @@
             <tr>
                 <th>ID</th>
                 <th>Category Name</th>
+                <th>Businesses</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($business_categories as $business_category)
+            @if(isset($categories[0]))
+            @foreach($categories as $category)
                 <tr>
-                    <td>{{$business_category->id}}</td>
-                    <td>{{ $business_category->category_name }}</td>
+                    <td>{{$category->id}}</td>
+                    <td>{{ $category->category_name }}</td>
+                    <td>{{ $category->businesses->pluck('name')->implode(', ') }}</td>
                     <td>
-                        <a href="{{ route('business_category.show', $business_category->id) }}" class="btn btn-info btn-sm">View</a>
-                        <a href="{{ route('business_category.edit', $business_category->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('business_category.destroy', $business_category->id) }}" method="POST" style="display:inline-block;">
+                        <a href="{{ route('business_category.show', $category->id) }}" class="btn btn-info btn-sm">View</a>
+                        <a href="{{ route('business_category.edit', $category->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <form action="{{ route('business_category.destroy', $category->id) }}" method="POST" style="display:inline-block;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this business?');">Delete</button>
@@ -33,6 +37,7 @@
                     </td>
                 </tr>
             @endforeach
+            @endif
         </tbody>
     </table>
 </div>

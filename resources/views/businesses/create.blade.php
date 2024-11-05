@@ -18,15 +18,15 @@
     <form action="{{ route('business.store') }}" method="POST">
         @csrf
         <div class="mb-3">
-    <label for="category" class="form-label">Category</label>
-    <select name="category" class="form-control" id="category" required>
-        <option value="">Select a category</option>
-        <option value="category1" {{ old('category') == 'category1' ? 'selected' : '' }}>Category 1</option>
-        <option value="category2" {{ old('category') == 'category2' ? 'selected' : '' }}>Category 2</option>
-        <option value="category3" {{ old('category') == 'category3' ? 'selected' : '' }}>Category 3</option>
-        <!-- Add more options as needed -->
-    </select>
-</div>
+            <label for="business_category_id" class="form-label">Category</label>
+            <select name="business_category_id" class="form-control" id="business_category_id" required>
+                @if(isset($categories[0]))
+                @foreach($categories as $key => $category)
+                <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+                @endforeach
+                @endif
+            </select>
+        </div>
 
 
         <div class="mb-3">
