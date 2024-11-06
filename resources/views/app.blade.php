@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <title>Shafiqul Alam's Dashboard</title>
 
     <style>
@@ -61,31 +62,61 @@
             </div>
             <div class="list-group list-group-flush">
                 <a href="{{ route('home.index') }}" class="list-group-item list-group-item-action" data-bs-toggle="collapse" data-bs-target="#homeSubmenu" aria-expanded="false">
-                        Home
-                </a>                 <!-- Dropdown Submenu -->
-                    <div class="collapse" id="homeSubmenu">
-                        <div class="list-group">
-                            <a href="" class="list-group-item list-group-item-action ms-3">Slider</a>
-                            <a href="" class="list-group-item list-group-item-action ms-3">Hero</a>
-                            <a href="" class="list-group-item list-group-item-action ms-3">Programs</a>
-                            <a href="" class="list-group-item list-group-item-action ms-3">Gallery</a>
-                            <a href="" class="list-group-item list-group-item-action ms-3">News</a>
-                        </div>
+                    <i class="fas fa-home me-2"></i> Home
+                </a> 
+                <!-- Dropdown Submenu -->
+                <div class="collapse" id="homeSubmenu">
+                    <div class="list-group " style="width: 220px;">
+                        <a href="" class="list-group-item list-group-item-action ms-3"><i class="fas fa-images me-2"></i> Slider</a>
+                        <a href="" class="list-group-item list-group-item-action ms-3"><i class="fas fa-flag me-2"></i> Hero</a>
+                        <a href="" class="list-group-item list-group-item-action ms-3"><i class="fas fa-graduation-cap me-2"></i> Programs</a>
+                        <a href="" class="list-group-item list-group-item-action ms-3"><i class="fas fa-photo-video me-2"></i> Gallery</a>
+                        <a href="" class="list-group-item list-group-item-action ms-3"><i class="fas fa-newspaper me-2"></i> News</a>
                     </div>
-                <a href="{{ route('biography.index') }}" class="list-group-item list-group-item-action">Biography</a>
-                <a href="{{route('business_category.index')}}" class="list-group-item list-group-item-action">Business Category</a>
-                <a href="{{ route('business.index') }}" class="list-group-item list-group-item-action" >Business</a>
-                <a href="{{route('award_category.index')}}" class="list-group-item list-group-item-action">Award Category</a>
-
-                <a href="{{route('award.index')}}" class="list-group-item list-group-item-action">Award & Honor</a>
-                
-                <a href="{{ route('blog.index') }}" class="list-group-item list-group-item-action">Blog</a>
-                <a href="{{ route('video.index') }}" class="list-group-item list-group-item-action">Video</a>
+                </div>
+                <a href="{{ route('biography.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-user me-2"></i> Biography</a>
+                <a href="{{ route('business_category.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-th-large me-2"></i> Business Category</a>
+                <a href="{{ route('business.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-briefcase me-2"></i> Business</a>
+                <a href="{{ route('award_category.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-trophy me-2"></i> Award Category</a>
+                <a href="{{ route('award.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-award me-2"></i> Award & Honor</a>
+                <a href="{{ route('blog.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-blog me-2"></i> Blog</a>
+                <a href="{{ route('video.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-video me-2"></i> Video</a>
             </div>
         </div>
         <!-- Page Content -->
         <div id="page-content-wrapper">
-            <div class="container-fluid p-4">
+            <div class="navbar-container">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm py-3 px-4">
+                         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                        
+                        <!-- Search Button -->
+                        <form class="form-inline my-2 my-lg-0 mx-auto w-50">
+                            <input class="form-control mr-sm-2 w-75" type="search" placeholder="Search" aria-label="Search">
+                                <i class="fas fa-search"></i> <!-- Optional icon for search button -->
+                            </button>
+                        </form>
+
+                        <!-- Notification Icon -->
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-bell text-primary"></i> <!-- Notification icon styled -->
+                                    <span class="badge badge-danger badge-pill">3</span> <!-- Rounded notification count badge -->
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsDropdown">
+                                    <h6 class="dropdown-header">Notifications</h6>
+                                    <a class="dropdown-item" href="#">Notification 1</a>
+                                    <a class="dropdown-item" href="#">Notification 2</a>
+                                    <a class="dropdown-item" href="#">Notification 3</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item text-center text-primary" href="#">View All</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </nav>
+            </div>
+
+            <div class="container-fluid p-4 bg-light">
                 @yield('content')
             </div>
         </div>

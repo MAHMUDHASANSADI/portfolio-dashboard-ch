@@ -19,7 +19,7 @@
         @method('PUT')
         <div class="mb-3">
             <label for="category_name" class="form-label">Name</label>
-            <input type="text" name="category_name" class="form-control" id="category_name" value="{{ $business_categories->category_name }}" required>
+            <input type="text" name="category_name" class="form-control" id="category_name" value="{{ $award_categories->category_name }}" required>
         </div>
         
         <button type="submit" class="btn btn-primary">Update</button>

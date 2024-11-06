@@ -7,7 +7,7 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">Id: {{ $award_category->id }}</h5>
-            <p class="card-text">Category Name: {{ $business_category->category_name }}</p>
+            <p class="card-text">Category Name: {{ $award_category->category_name }}</p>
         </div>
     </div>
 

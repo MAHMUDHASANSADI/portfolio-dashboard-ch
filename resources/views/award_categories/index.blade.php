@@ -1,9 +1,16 @@
 {{-- resources/views/businesses/index.blade.php --}}
+<!-- <style>
+    .table-header-dark {
+        background-color: #003366 !important; /* Dark blue background */
+        color: #ffffff !important; /* White text color */
+    }
+</style> -->
+
 @extends('app')
 
 @section('content')
 <div class="container">
-    <h1>Award List</h1>
+    <h1>Award Category List</h1>
     <a href="{{ route('award_category.create') }}" class="btn btn-primary mb-3">Add New Category</a>
 
     @if (session('success'))
@@ -11,7 +18,7 @@
     @endif
 
     <table class="table table-bordered">
-        <thead>
+        <thead class="table-header-dark">
             <tr>
                 <th>ID</th>
                 <th>Category Name</th>
@@ -23,7 +30,7 @@
             @if(isset($categories[0]))
             @foreach($categories as $category)
                 <tr>
-                    <td>{{$category->id}}</td>
+                    <td>{{ $category->id }}</td>
                     <td>{{ $category->category_name }}</td>
                     <td>{{ $category->awards->pluck('name')->implode(', ') }}</td>
                     <td>
@@ -32,7 +39,7 @@
                         <form action="{{ route('award_category.destroy', $category->id) }}" method="POST" style="display:inline-block;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this business?');">Delete</button>
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this category?');">Delete</button>
                         </form>
                     </td>
                 </tr>

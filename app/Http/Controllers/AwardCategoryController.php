@@ -41,7 +41,7 @@ class AwardCategoryController extends Controller
     
     public function show($id)
     {
-        $award_category = BusinessCategory::findOrFail($id); // Find business by ID
+        $award_category = AwardCategory::findOrFail($id); // Find business by ID
         return view('award_categories.show', compact('award_category')); // Pass to view
     }
 
