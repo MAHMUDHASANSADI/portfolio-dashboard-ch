@@ -1,18 +1,14 @@
-{{-- resources/views/businesses/show.blade.php --}}
+<!-- resources/views/programs/show.blade.php -->
+
 @extends('app')
 
 @section('content')
 <div class="container">
-    <h1>Business Details</h1>
-
-    <div class="card">
-        <div class="card-body">
-            <h4 class="card-title">Name: {{ $business->businessCategory->category_name }}</h4>
-            <h5 class="card-title">Name: {{ $business->name }}</h5>
-            <p class="card-text">Description: {{ $business->description }}</p>
-        </div>
-    </div>
-
-    <a href="{{ route('business.index') }}" class="btn btn-secondary mt-3">Back to List</a>
+    <h1>{{ $program->title }}</h1>
+    <p>{{ $program->description }}</p>
+    <p><strong>Date:</strong> {{ $program->price }}</p>
+    <img src="{{ asset('storage/' . $program->image) }}" alt="Image" width="300">
+    <br><br>
+    <a href="{{ route('program.index') }}" class="btn btn-secondary">Back to Programs</a>
 </div>
 @endsection

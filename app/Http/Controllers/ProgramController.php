@@ -2,64 +2,103 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Program;
 use Illuminate\Http\Request;
+use App\Models\Program;
+use Illuminate\Support\Facades\Storage;
 
 class ProgramController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
-        //
+        $programs = Program::all();
+        return view('home.programs.index', compact('programs'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    
     public function create()
     {
-        //
+        return view('home.programs.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric', // Ensure 'price' is a numeric value
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+        
+
+        $imagePath = $request->file('image')->store('program_images', 'public');
+
+        Program::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'price' => $request->price,
+            'image' => $imagePath
+        ]);
+
+        return redirect()->route('program.index')->with('success', 'Program post created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Program $program)
+    
+    public function show(string $id)
     {
-        //
+        $program = Program::findOrFail($id);
+        return view('home.programs.show', compact('program'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Program $program)
+    
+    public function edit(string $id)
     {
-        //
+        $program = Program::findOrFail($id);
+        return view('home.programs.edit', compact('program'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Program $program)
+    
+    public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric', // Ensure 'price' is a numeric value
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+        
+
+        $program = Program::findOrFail($id);
+
+        if ($request->hasFile('image')) {
+            if ($program->image) {
+                Storage::disk('public')->delete($program->image);
+            }
+
+            $imagePath = $request->file('image')->store('program_images', 'public');
+            $program->image = $imagePath;
+        }
+
+        $program->title = $request->title;
+        $program->description = $request->description;
+        $program->price = $request->price;
+        $program->save();
+
+        return redirect()->route('program.index')->with('success', 'Program post update successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Program $program)
+    
+    public function destroy(string $id)
     {
-        //
+        $program = Program::findOrFail($id);
+
+        if ($program->image) {
+            Storage::disk('public')->delete($program->image);
+        }
+
+        $program->delete();
+
+        return redirect()->route('program.index')->with('success', 'Program post deleted successfully.');
     }
 }
