@@ -61,17 +61,17 @@
                 <img src="{{ asset('/storage/blog_images/chairman.png') }}" alt="" style="width: 220px; height: 50px;">
             </div>
             <div class="list-group list-group-flush">
-                <a href="{{ route('home.index') }}" class="list-group-item list-group-item-action" data-bs-toggle="collapse" data-bs-target="#homeSubmenu" aria-expanded="false">
+                <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="collapse" data-bs-target="#homeSubmenu" aria-expanded="false">
                     <i class="fas fa-home me-2"></i> Home
                 </a> 
                 <!-- Dropdown Submenu -->
                 <div class="collapse" id="homeSubmenu">
                     <div class="list-group " style="width: 220px;">
-                        <a href="" class="list-group-item list-group-item-action ms-3"><i class="fas fa-images me-2"></i> Slider</a>
-                        <a href="" class="list-group-item list-group-item-action ms-3"><i class="fas fa-flag me-2"></i> Hero</a>
-                        <a href="" class="list-group-item list-group-item-action ms-3"><i class="fas fa-graduation-cap me-2"></i> Programs</a>
-                        <a href="" class="list-group-item list-group-item-action ms-3"><i class="fas fa-photo-video me-2"></i> Gallery</a>
-                        <a href="" class="list-group-item list-group-item-action ms-3"><i class="fas fa-newspaper me-2"></i> News</a>
+                        <a href="{{route('slider.index')}}" class="list-group-item list-group-item-action ms-3"><i class="fas fa-images me-2"></i> Slider</a>
+                        <a href="{{route('hero.index')}}" class="list-group-item list-group-item-action ms-3"><i class="fas fa-flag me-2"></i> Hero</a>
+                        <a href="{{route('program.index')}}" class="list-group-item list-group-item-action ms-3"><i class="fas fa-graduation-cap me-2"></i> Programs</a>
+                        <a href="{{route('gallery.index')}}" class="list-group-item list-group-item-action ms-3"><i class="fas fa-photo-video me-2"></i> Gallery</a>
+                        <a href="{{route('news.index')}}" class="list-group-item list-group-item-action ms-3"><i class="fas fa-newspaper me-2"></i> News</a>
                     </div>
                 </div>
                 <a href="{{ route('biography.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-user me-2"></i> Biography</a>
