@@ -1,44 +1,28 @@
-{{-- resources/views/businesses/create.blade.php --}}
+<!-- resources/views/blogs/create.blade.php -->
+
 @extends('app')
 
 @section('content')
 <div class="container">
-    <h1>Add New Business</h1>
+    <h1>Create slider</h1>
 
-    @if ($errors->any())
+    @if($errors->any())
         <div class="alert alert-danger">
             <ul>
-                @foreach ($errors->all() as $error)
+                @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
         </div>
     @endif
 
-    <form action="{{ route('business.store') }}" method="POST">
+    <form action="{{ route('slider.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="mb-3">
-            <label for="business_category_id" class="form-label">Category</label>
-            <select name="business_category_id" class="form-control" id="business_category_id" required>
-                @if(isset($categories[0]))
-                @foreach($categories as $key => $category)
-                <option value="{{ $category->id }}">{{ $category->category_name }}</option>
-                @endforeach
-                @endif
-            </select>
+            <label for="image" class="form-label">Image</label>
+            <input type="file" name="image" class="form-control" required>
         </div>
-
-
-        <div class="mb-3">
-            <label for="name" class="form-label">Name</label>
-            <input type="text" name="name" class="form-control" id="name" value="{{ old('name') }}" required>
-        </div>
-        <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea name="description" class="form-control" id="description">{{ old('description') }}</textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Save</button>
-        <a href="{{ route('business.index') }}" class="btn btn-secondary">Back to List</a>
+        <button type="submit" class="btn btn-success">Create Blog</button>
     </form>
 </div>
 @endsection

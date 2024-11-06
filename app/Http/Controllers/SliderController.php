@@ -2,64 +2,90 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Slider;
 use Illuminate\Http\Request;
+use App\Models\Slider;
+use Illuminate\Support\Facades\Storage;
 
 class SliderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
-        //
+        $sliders = Slider::all();
+        return view('home.slider.index', compact('sliders'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    
     public function create()
     {
-        //
+        return view('home.slider.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        $imagePath = $request->file('image')->store('Slider_images', 'public');
+
+        Slider::create([
+            'image' => $imagePath
+        ]);
+
+        return redirect()->route('slider.index')->with('success', 'Slider post created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Slider $slider)
+    
+    public function show(string $id)
     {
-        //
+        $slider = Slider::findOrFail($id);
+        return view('home.slider.show', compact('slider'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Slider $slider)
+    
+    public function edit(string $id)
     {
-        //
+        $slider = Slider::findOrFail($id);
+        return view('home.slider.edit', compact('slider'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Slider $slider)
+    
+    public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        $slider = Slider::findOrFail($id);
+
+        if ($request->hasFile('image')) {
+            if ($slider->image) {
+                Storage::disk('public')->delete($slider->image);
+            }
+
+            $imagePath = $request->file('image')->store('slider_images', 'public');
+            $slider->image = $imagePath;
+        }
+
+       
+        $slider->save();
+
+        return redirect()->route('slider.index')->with('success', 'Slider post updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Slider $slider)
+    
+    public function destroy(string $id)
     {
-        //
+        $slider = Slider::findOrFail($id);
+
+        if ($slider->image) {
+            Storage::disk('public')->delete($slider->image);
+        }
+
+        $slider->delete();
+
+        return redirect()->route('slider.index')->with('success', 'Slider post deleted successfully.');
     }
 }
