@@ -6,7 +6,17 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use \App\Models\BusinessCategory;
-
+use App\Models\AwardCategory;
+use App\Models\Biography;
+use App\Models\Blog;
+use App\Models\Gallery;
+use App\Models\Hero;
+use App\Models\Home;
+use App\Models\News;
+use App\Models\Program;
+use App\Models\Slider;
+use App\Models\User;
+use App\Models\Video;
 class APIController extends Controller
 {
     public function businessCategories(){
@@ -27,5 +37,53 @@ class APIController extends Controller
             ])
             ->find($id)
         ], 200);
+    }
+    public function awardCategories(){
+        return response()->json([
+            AwardCategory::with([
+                'awards'
+            ])
+            ->get([
+                'id', 'category_name'
+            ])
+        ], 200);
+    }
+    public function awardCategory(){
+        return response()->json([
+            AwardCategory::with([
+                'awards'
+            ])
+            ->get([
+                'id', 'category_name'
+            ])
+        ], 200);
+    }
+    public function biography(){
+        $biographies = Biography::all();
+        return response()->json($biographies, 200);
+    }
+    public function blog(){
+        $blogs = Blog::all();
+        return response()->json($blogs, 200);
+    }
+    public function gallery(){
+        $galleries = Gallery::all();
+        return response()->json($galleries, 200);
+    }
+    public function hero(){
+        $heros=Hero::all();
+        return response()->json($heros,200);
+    }
+    public function news(){
+        $news=News::all();
+        return response()->json($news,200);
+    }
+    public function program(){
+        $programs=Program::all();
+        return response()->json($programs,200);
+    }
+    public function slider(){
+        $sliders=Slider::all();
+        return response()->json($sliders,200);
     }
 }
