@@ -81,6 +81,16 @@
                 <a href="{{ route('award.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-award me-2"></i> Award & Honor</a>
                 <a href="{{ route('blog.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-blog me-2"></i> Blog</a>
                 <a href="{{ route('video.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-video me-2"></i> Video</a>
+
+                <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+
+                            <a href="route('logout')" class="list-group-item list-group-item-action" 
+                                    onclick="event.preventDefault();
+                                                this.closest('form').submit();"> <i class="fas fa-sign-out me-2"></i>{{ __('Log Out') }}
+                                
+                            </a>
+                        </form>
             </div>
         </div>
         <!-- Page Content -->
