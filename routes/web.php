@@ -28,7 +28,11 @@ use App\Http\Controllers\VideoController;
 */
 
 Route::get('/', function () {
-    return redirect('login');
+    return redirect('dashboard');
+});
+
+Route::get('/login', function () {
+    return 'Hello';
 });
 
 

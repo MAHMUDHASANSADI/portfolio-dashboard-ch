@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use DB, DataTables;
 use Illuminate\Http\Request;
 use App\Models\Blog;
 use Illuminate\Support\Facades\Storage;
@@ -11,8 +11,15 @@ class BlogController extends Controller
     
     public function index()
     {
-        $blogs = Blog::all();
-        return view('blogs.index', compact('blogs'));
+        if (request()->ajax()) {
+            return DataTables::of(
+                Blog::query()
+            )
+            ->addIndexColumn()
+            ->toJson();
+        }
+
+        return view('blogs.index');
     }
 
     
