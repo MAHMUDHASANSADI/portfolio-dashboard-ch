@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use DB, DataTables;
 use Illuminate\Http\Request;
+use App\Models\Business;
 use App\Models\BusinessCategory;
 
 
@@ -13,18 +14,35 @@ class BusinessCategoryController extends Controller
     {
         if (request()->ajax()) {
             return DataTables::of(
-                BusinessCategory::query()
+                BusinessCategory::with([
+                    'businesses'
+                ])
             )
             ->addIndexColumn()
 
-            ->editColumn('image', function($biography){
-                return '<img style="height:50px;width:80px;" src="'.asset('storage/'.$biography->image).'"/>';
+            ->editColumn('image', function($category){
+                return '<img style="height:50px;width:80px;" src="'.asset('storage/'.$category->image).'"/>';
             })
 
-            ->addColumn('actions', function($biography){
+            ->addColumn('businesses', function($category){
+                return $category->businesses->pluck('name')->implode(', ');
+            })
+            ->filterColumn('businesses', function($query, $keyword){
+                return $query->whereHas('businesses', function($query) use($keyword){
+                    return $query->where('name', 'LIKE', '%'.$keyword.'%');
+                });
+            })
+            ->orderColumn('businesses', function ($query, $order) {
+                return pleaseSortMe($query, $order, Business::select('businesses.name')
+                    ->whereColumn('businesses.business_category_id', 'business_categories.id')
+                    ->take(1)
+                );
+            })
+
+            ->addColumn('actions', function($category){
                 return view('actions', [
-                    'object' => $biography,
-                    'route' => 'biography',
+                    'object' => $category,
+                    'route' => 'business_category',
                 ])->render();
             })
             
@@ -34,7 +52,7 @@ class BusinessCategoryController extends Controller
 
         return view('business_categories.index', [
             'title' => 'Business Category',
-            'headerColumns' => headerColumns('business_category')
+            'headerColumns' => headerColumns('business-categories')
         ]);
     }
     

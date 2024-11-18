@@ -54,9 +54,10 @@ function headerColumns($key = ''){
             ['description', 'description', 'text-center'],
             ['actions', 'actions', 'text-center'],
         ],
-        'business_category' => [
+        'business-categories' => [
             ['SL', 'SL'],
             ['category_name', 'category_name', 'text-center'],
+            ['businesses', 'businesses', 'text-center'],
             ['actions', 'actions', 'text-center'],
         ],
     ];
