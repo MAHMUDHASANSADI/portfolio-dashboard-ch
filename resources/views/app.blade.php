@@ -159,7 +159,7 @@
                         className: val[2],
                     });
                }
-            });
+            });
 
             $('.datatable').DataTable({
                 processing: true,
