@@ -1,28 +1,27 @@
-<!-- resources/views/blogs/index.blade.php -->
-
 @extends('app')
 
 @section('content')
 <div class="container">
-    <h1>All Blogs</h1>
-    <a href="{{ route('blog.create') }}" class="btn btn-primary mb-3">Add New Blog</a>
-
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
 
-    <table class="table table-bordered datatable">
-        <thead>
-            <tr>
-                <th>SL</th>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Date</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-    </table>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-dark">
+                    <h4 class="text-white mb-0">
+                        {{ $title }}
+                        <a href="{{ route('blog.create') }}" class="btn btn-primary" style="float: right;"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add New Blog</a>
+                    </h4>
+                </div>
+                <div class="card-body">
+                    @include('yajra.datatable')
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection

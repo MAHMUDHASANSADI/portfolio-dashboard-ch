@@ -16,10 +16,26 @@ class BlogController extends Controller
                 Blog::query()
             )
             ->addIndexColumn()
+
+            ->editColumn('image', function($blog){
+                return '<img src="'.asset('storage/'.$blog->image).'"/>';
+            })
+
+            ->addColumn('actions', function($blog){
+                return view('actions', [
+                    'object' => $blog,
+                    'route' => 'blog',
+                ])->render();
+            })
+            
+            ->rawColumns(['image', 'actions'])
             ->toJson();
         }
 
-        return view('blogs.index');
+        return view('blogs.index', [
+            'title' => 'Blogs',
+            'headerColumns' => headerColumns('blogs')
+        ]);
     }
 
     
