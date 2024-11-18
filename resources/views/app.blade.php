@@ -136,8 +136,11 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
-    @include('yajra.js')
+    <script src="{{ asset('cdn/js/datatable/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('cdn/js/datatable/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('cdn/js/datatable/datatables.min.js') }}"></script>
+    <script src="{{ asset('cdn/js/datatable/buttons.colVis.min.js') }}"></script>
     
+    @include('yajra.js')
 </body>
 </html>
