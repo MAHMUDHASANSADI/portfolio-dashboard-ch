@@ -18,7 +18,7 @@ class BlogController extends Controller
             ->addIndexColumn()
 
             ->editColumn('image', function($blog){
-                return '<img src="'.asset('storage/'.$blog->image).'"/>';
+                return '<img style="height:50px;width:80px;" src="'.asset('storage/'.$blog->image).'"/>';
             })
 
             ->addColumn('actions', function($blog){

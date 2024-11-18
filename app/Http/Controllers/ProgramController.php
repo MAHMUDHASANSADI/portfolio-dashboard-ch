@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use DB,DataTables;
 use Illuminate\Http\Request;
 use App\Models\Program;
 use Illuminate\Support\Facades\Storage;
@@ -11,8 +11,30 @@ class ProgramController extends Controller
     
     public function index()
     {
-        $programs = Program::all();
-        return view('home.programs.index', compact('programs'));
+        if (request()->ajax()) {
+            return DataTables::of(
+                Program::query()
+            )
+            ->addIndexColumn()
+
+            ->editColumn('image', function($program){
+                return '<img style="height:50px; width:80px;" src="'.asset('storage/'.$program->image).'"/>';
+            })
+
+            ->addColumn('actions', function($program){
+                return view('actions', [
+                    'object' => $program,
+                    'route' => 'program',
+                ])->render();
+            })
+            
+            ->rawColumns(['image', 'actions'])
+            ->toJson();
+        }
+        return view('home.programs.index', [
+            'title' => 'Program',
+            'headerColumns' => headerColumns('program')
+        ]);
     }
 
     

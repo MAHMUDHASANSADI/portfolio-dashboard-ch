@@ -1,41 +1,27 @@
-<!-- resources/views/gallerys/index.blade.php -->
-
 @extends('app')
 
 @section('content')
 <div class="container">
-    <h1>All Gallerys</h1>
-    <a href="{{ route('gallery.create') }}" class="btn btn-primary mb-3">Add New Gallery</a>
-
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Image</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($galleries as $gallery)
-            <tr>
-                <td><img src="{{ asset('storage/' . $gallery->image) }}" alt="Image" width="50"></td>
-                <td>
-                    <a href="{{ route('gallery.show', $gallery->id) }}" class="btn btn-info btn-sm">View</a>
-                    <a href="{{ route('gallery.edit', $gallery->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                    <form action="{{ route('gallery.destroy', $gallery->id) }}" method="POST" style="display: inline-block;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-dark">
+                    <h4 class="text-white mb-0">
+                        {{ $title }}
+                        <a href="{{ route('gallery.create') }}" class="btn btn-primary" style="float: right;"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add New Blog</a>
+                    </h4>
+                </div>
+                <div class="card-body">
+                    @include('yajra.datatable')
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection

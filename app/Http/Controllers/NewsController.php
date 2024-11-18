@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use DB, DataTables;
 use Illuminate\Http\Request;
 use App\Models\News;
 use Illuminate\Support\Facades\Storage;
@@ -11,8 +11,31 @@ class NewsController extends Controller
     
     public function index()
     {
-        $news = News::all();
-        return view('home.news.index', compact('news'));
+        if (request()->ajax()) {
+            return DataTables::of(
+                News::query()
+            )
+            ->addIndexColumn()
+
+            ->editColumn('image', function($news){
+                return '<img style="height:50px;width:80px;" src="'.asset('storage/'.$news->image).'"/>';
+            })
+
+            ->addColumn('actions', function($news){
+                return view('actions', [
+                    'object' => $news,
+                    'route' => 'news',
+                ])->render();
+            })
+            
+            ->rawColumns(['image', 'actions'])
+            ->toJson();
+        }
+
+        return view('home.news.index', [
+            'title' => 'News',
+            'headerColumns' => headerColumns('news')
+        ]);
     }
 
     

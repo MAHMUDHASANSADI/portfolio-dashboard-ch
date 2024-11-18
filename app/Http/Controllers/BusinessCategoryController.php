@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use DB, DataTables;
 use Illuminate\Http\Request;
 use App\Models\BusinessCategory;
 
@@ -11,11 +11,31 @@ class BusinessCategoryController extends Controller
     
     public function index()
     {
+        if (request()->ajax()) {
+            return DataTables::of(
+                BusinessCategory::query()
+            )
+            ->addIndexColumn()
+
+            ->editColumn('image', function($biography){
+                return '<img style="height:50px;width:80px;" src="'.asset('storage/'.$biography->image).'"/>';
+            })
+
+            ->addColumn('actions', function($biography){
+                return view('actions', [
+                    'object' => $biography,
+                    'route' => 'biography',
+                ])->render();
+            })
+            
+            ->rawColumns(['image', 'actions'])
+            ->toJson();
+        }
+
         return view('business_categories.index', [
-            'categories' => BusinessCategory::with([
-                'businesses'
-            ])->get()
-        ]); // Pass to view
+            'title' => 'Business Category',
+            'headerColumns' => headerColumns('business_category')
+        ]);
     }
     
     public function create()

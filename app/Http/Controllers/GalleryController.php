@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use DB, DataTables;
 
 use Illuminate\Http\Request;
 use App\Models\Gallery;
@@ -11,8 +12,31 @@ class GalleryController extends Controller
     
     public function index()
     {
-        $galleries = Gallery::all();
-        return view('home.gallery.index', compact('galleries'));
+        if (request()->ajax()) {
+            return DataTables::of(
+                Gallery::query()
+            )
+            ->addIndexColumn()
+
+            ->editColumn('image', function($gallery){
+                return '<img style="height:50px; width:80px;" src="'.asset('storage/'.$gallery->image).'"/>';
+            })
+
+            ->addColumn('actions', function($gallery){
+                return view('actions', [
+                    'object' => $gallery,
+                    'route' => 'gallery',
+                ])->render();
+            })
+            
+            ->rawColumns(['image', 'actions'])
+            ->toJson();
+        }
+        return view('home.gallery.index', [
+            'title' => 'Gallery',
+            'headerColumns' => headerColumns('gallery')
+        ]);
+    
     }
 
     

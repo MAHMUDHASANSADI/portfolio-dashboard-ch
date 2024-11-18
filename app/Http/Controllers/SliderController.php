@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use DB, DataTables;
 use Illuminate\Http\Request;
 use App\Models\Slider;
 use Illuminate\Support\Facades\Storage;
@@ -11,8 +11,30 @@ class SliderController extends Controller
     
     public function index()
     {
-        $sliders = Slider::all();
-        return view('home.slider.index', compact('sliders'));
+        if (request()->ajax()) {
+            return DataTables::of(
+                Slider::query()
+            )
+            ->addIndexColumn()
+
+            ->editColumn('image', function($slider){
+                return '<img style="height:50px; width:80px;" src="'.asset('storage/'.$slider->image).'"/>';
+            })
+
+            ->addColumn('actions', function($slider){
+                return view('actions', [
+                    'object' => $slider,
+                    'route' => 'slider',
+                ])->render();
+            })
+            
+            ->rawColumns(['image', 'actions'])
+            ->toJson();
+        }
+        return view('home.slider.index', [
+            'title' => 'Sliders',
+            'headerColumns' => headerColumns('slider')
+        ]);
     }
 
     
