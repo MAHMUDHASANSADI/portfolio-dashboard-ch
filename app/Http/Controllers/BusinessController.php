@@ -14,7 +14,9 @@ class BusinessController extends Controller
     {
         if (request()->ajax()) {
             return DataTables::of(
-                Business::query()
+                Business::with([
+                    'businessCategory',
+                ])
             )
             ->addIndexColumn()
 
