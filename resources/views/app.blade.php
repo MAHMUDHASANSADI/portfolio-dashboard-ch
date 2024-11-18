@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <title>Shafiqul Alam's Dashboard</title>
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <link rel="stylesheet" href="{{ asset('cdn/css/datatables.min.css') }}"/>
 
     <style>
         /* Custom sidebar styling */
@@ -54,6 +55,7 @@
         }
     </style>
 
+    @include('yajra.css')
 </head>
 <body>
     <div class="d-flex" id="wrapper">
@@ -86,14 +88,12 @@
                 <!-- <a href="{{ route('register') }}" class="ml-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Register</a> -->
 
                 <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <a href="route('logout')" class="list-group-item list-group-item-action" 
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();"> <i class="fas fa-sign-out me-2"></i>{{ __('Log Out') }}
-                                
-                            </a>
-                        </form>
+                @csrf
+                    <a href="route('logout')" class="list-group-item list-group-item-action" 
+                            onclick="event.preventDefault();
+                                        this.closest('form').submit();"> <i class="fas fa-sign-out me-2"></i>{{ __('Log Out') }}
+                    </a>
+                </form>
             </div>
         </div>
         <!-- Page Content -->
@@ -137,55 +137,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
-
-    <script>
-        $(document).ready( function () {
-            var columns = [{
-                data: 'DT_RowIndex',
-                className: 'text-center',
-                'orderable': false,
-                'searchable': false,
-                render: function(data, type, row, meta) {
-                    return '<p style="width: 85px;white-space: normal">'+(meta.row + meta.settings._iDisplayStart + 1)+'</p>';
-                }
-            }];
-
-            var headerColumns = <?php echo json_encode(isset($headerColumns) ? $headerColumns : []); ?>;
-            $.each(headerColumns, function(index, val) {
-                if(index > 0){
-                    columns.push({
-                        data: val[0], 
-                        name: val[1],
-                        className: val[2],
-                    });
-               }
-            });
-
-            $('.datatable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: location.href,
-                columns: columns,
-
-                lengthMenu: [
-                    [ 50, 100, 500, 1000, -1 ],
-                    [ '50 rows', '100 rows', '500 rows', '1000 rows', 'All Rows' ]
-                ],
-
-                language: {
-                    emptyTable: "No data available right now"
-                },
-
-                "oLanguage": {
-                    "sSearch": ""
-                },
-                
-                sScrollXInner: "100%",
-                scrollCollapse: true,
-
-                dom: 'Bfrtip'
-            });
-        } );
-    </script>
+    @include('yajra.js')
+    
 </body>
 </html>

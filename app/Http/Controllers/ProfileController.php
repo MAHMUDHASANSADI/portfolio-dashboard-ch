@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
+use \App\Models\UserColumnVisibility;
+
 class ProfileController extends Controller
 {
     /**
@@ -56,5 +58,15 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    public function updateUserColumnVisibilities(Request $request)
+    {
+        UserColumnVisibility::updateOrCreate([
+            'user_id' => auth()->user()->id,
+            'url' => $request->url
+        ],[
+            'columns' => json_encode($request->columns)
+        ]);
     }
 }
