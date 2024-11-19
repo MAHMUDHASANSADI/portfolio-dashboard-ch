@@ -52,15 +52,32 @@ class HeroController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $imagePath = $request->file('image')->store('hero_images', 'public');
+        DB::beginTransaction();
+        try{
+            // Any kind of code.
+            $name = rand().'.'.$request->file('image')->getClientOriginalExtension();
+            $request->file('image')->move(storage_path('app/public/hero_images'), $name);
+            
+            Hero::create([
+                'title' => $request->title,
+                'description' => $request->description,
+                'image' => 'hero_images/'.$name
+            ]);
 
-        Hero::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'image' => $imagePath
-        ]);
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Hero post created successfully.'
+            ]);
+        }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
 
-        return redirect()->route('hero.index')->with('success', 'Hero post created successfully.');
     }
 
     
@@ -86,22 +103,36 @@ class HeroController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $hero = Hero::findOrFail($id);
+        DB::beginTransaction();
+        try{
+            $hero = Hero::findOrFail($id);
+            if ($request->hasFile('image')) {
+                if ($hero->image) {
+                    Storage::disk('public')->delete($hero->image);
+                }
 
-        if ($request->hasFile('image')) {
-            if ($hero->image) {
-                Storage::disk('public')->delete($hero->image);
+                $name = rand().'.'.$request->file('image')->getClientOriginalExtension();
+                $request->file('image')->move(storage_path('app/public/hero_images'), $name);
+                $hero->image = 'hero_images/'.$name;
             }
+    
+            $hero->title = $request->title;
+            $hero->description = $request->description;
+            $hero->save();
 
-            $imagePath = $request->file('image')->store('hero_images', 'public');
-            $hero->image = $imagePath;
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Hero post updated successfully.'
+            ]);
         }
-
-        $hero->title = $request->title;
-        $hero->description = $request->description;
-        $hero->save();
-
-        return redirect()->route('hero.index')->with('success', 'Hero post updated successfully.');
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 
     
