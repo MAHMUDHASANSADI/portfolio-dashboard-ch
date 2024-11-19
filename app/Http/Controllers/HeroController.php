@@ -57,7 +57,7 @@ class HeroController extends Controller
             Hero::create([
                 'title' => $request->title,
                 'description' => $request->description,
-                'image' => fileUplaod($request->file('image'), 'hero_images')
+                'image' => fileUpload($request->file('image'), 'hero_images')
             ]);
 
             DB::commit();
@@ -104,7 +104,7 @@ class HeroController extends Controller
             $hero = Hero::findOrFail($id);
             if ($request->hasFile('image')) {
                 fileDelete($hero->image);
-                $hero->image = fileUplaod($request->file('image'), 'hero_images');
+                $hero->image = fileUpload($request->file('image'), 'hero_images');
             }
     
             $hero->title = $request->title;
@@ -129,10 +129,27 @@ class HeroController extends Controller
     
     public function destroy(string $id)
     {
-        $hero = Hero::findOrFail($id);
-        fileDelete($hero->image);
-        $hero->delete();
 
-        return redirect()->route('hero.index')->with('success', 'Hero post deleted successfully.');
+        try{
+            $hero = Hero::findOrFail($id);
+            fileDelete($hero->image);
+            $hero->delete();
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Hero post deleted successfully.'
+            ]);
+
+        }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+
+        }
+        
     }
 }

@@ -33,7 +33,7 @@ function pleaseSortMe($query, $order, $orderByQuery)
         });
 }
 
-function fileUplaod($file, $path){
+function fileUpload($file, $path){
     $name = rand().'.'.$file->getClientOriginalExtension();
     $file->move(storage_path('app/public/'.$path), $name);
     return $path.'/'.$name;

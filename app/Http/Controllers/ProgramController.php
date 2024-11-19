@@ -52,18 +52,31 @@ class ProgramController extends Controller
             'price' => 'required|numeric', // Ensure 'price' is a numeric value
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
-        
 
-        $imagePath = $request->file('image')->store('program_images', 'public');
+        DB::beginTransaction();
+        try{
 
-        Program::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'price' => $request->price,
-            'image' => $imagePath
+            Program::create([
+                'title' => $request->title,
+                'description' => $request->description,
+                'price' => $request->price,
+                'image' => fileUpload($request->file('image'),'program_images')
         ]);
 
-        return redirect()->route('program.index')->with('success', 'Program post created successfully.');
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Program post created successfully.'
+            ]);
+        }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
+        
     }
 
     
@@ -89,38 +102,62 @@ class ProgramController extends Controller
             'price' => 'required|numeric', // Ensure 'price' is a numeric value
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
+
+        DB::beginTransaction();
+        try{
+            $program = Program::findOrFail($id);
+
+            if ($request->hasFile('image')) {
+                fileDelete($program->image);
+                $program->image = fileUpload($request->file('image'), 'program_images');
+            }
+    
+            $program->title = $request->title;
+            $program->description = $request->description;
+            $program->price = $request->price;
+            $program->save();
+
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Program post update successfully'
+            ]);
+        }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
         
 
-        $program = Program::findOrFail($id);
-
-        if ($request->hasFile('image')) {
-            if ($program->image) {
-                Storage::disk('public')->delete($program->image);
-            }
-
-            $imagePath = $request->file('image')->store('program_images', 'public');
-            $program->image = $imagePath;
-        }
-
-        $program->title = $request->title;
-        $program->description = $request->description;
-        $program->price = $request->price;
-        $program->save();
-
-        return redirect()->route('program.index')->with('success', 'Program post update successfully.');
     }
 
     
     public function destroy(string $id)
     {
-        $program = Program::findOrFail($id);
+        try{
+            $program = Program::findOrFail($id);
+            fileDelete($program->image);
+    
+            $program->delete();
 
-        if ($program->image) {
-            Storage::disk('public')->delete($program->image);
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Program post deleted successfully.'
+            ]);
+
         }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
 
-        $program->delete();
-
-        return redirect()->route('program.index')->with('success', 'Program post deleted successfully.');
+        }
     }
 }

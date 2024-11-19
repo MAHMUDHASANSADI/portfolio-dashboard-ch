@@ -54,7 +54,7 @@ class SliderController extends Controller
         try{
             
             Slider::create([
-                'image' => fileUplaod($request->file('image'), 'Slider_images')
+                'image' => fileUpload($request->file('image'), 'Slider_images')
             ]);
 
             DB::commit();
@@ -98,7 +98,7 @@ class SliderController extends Controller
 
             if ($request->hasFile('image')) {
                 fileDelete($slider->image);
-                $slider->image = fileUplaod($request->file('image'), 'Slider_images');
+                $slider->image = fileUpload($request->file('image'), 'Slider_images');
             }
            
             $slider->save();
