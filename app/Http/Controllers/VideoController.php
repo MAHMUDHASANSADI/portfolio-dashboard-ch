@@ -1,20 +1,40 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use DB,DataTables;
 use Illuminate\Http\Request;
 use App\Models\Video;
 
 class VideoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
-        // Fetch all videos
-        $videos = Video::all();
-        return view('videos.index', compact('videos'));
+        if (request()->ajax()) {
+            return DataTables::of(
+                Video::query()
+            )
+            ->addIndexColumn()
+
+            // ->editColumn('image', function($video){
+            //     return '<img style="height:50px;width:80px;" src="'.asset('storage/'.$video->image).'"/>';
+            // })
+
+            ->addColumn('actions', function($video){
+                return view('actions', [
+                    'object' => $video,
+                    'route' => 'video',
+                ])->render();
+            })
+            
+            ->rawColumns(['actions'])
+            ->toJson();
+        }
+
+        return view('videos.index', [
+            'title' => 'Videos',
+            'headerColumns' => headerColumns('videos')
+        ]);
     }
 
     /**

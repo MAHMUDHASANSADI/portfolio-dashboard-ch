@@ -60,6 +60,26 @@ function headerColumns($key = ''){
             ['businesses', 'businesses', 'text-center'],
             ['actions', 'actions', 'text-center'],
         ],
+        'award' => [
+            ['SL', 'SL'],
+            ['category', 'category', 'text-center'],
+            ['award_name', 'award_name', 'text-center'],
+            ['description', 'description', 'text-center'],
+            ['actions', 'actions', 'text-center'],
+        ],
+        'award-categories' => [
+            ['SL', 'SL'],
+            ['category_name', 'category_name', 'text-center'],
+            ['awards', 'awards', 'text-center'],
+            ['actions', 'actions', 'text-center'],
+        ],
+        'videos' => [
+            ['SL', 'SL'],
+            ['title', 'title', 'text-center'],
+            ['description', 'description', 'text-center'],
+            ['url', 'url', 'text-center'],
+            ['actions', 'actions', 'text-center'],
+        ],
     ];
 
     return isset($columns[$key]) ? $columns[$key] : array(['SL', 'SL', 'text-center']);

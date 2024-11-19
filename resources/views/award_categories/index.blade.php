@@ -1,51 +1,27 @@
-{{-- resources/views/businesses/index.blade.php --}}
-<!-- <style>
-    .table-header-dark {
-        background-color: #003366 !important; /* Dark blue background */
-        color: #ffffff !important; /* White text color */
-    }
-</style> -->
-
 @extends('app')
 
 @section('content')
 <div class="container">
-    <h1>Award Category List</h1>
-    <a href="{{ route('award_category.create') }}" class="btn btn-primary mb-3">Add New Category</a>
-
-    @if (session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
     @endif
 
-    <table class="table table-bordered">
-        <thead class="table-header-dark">
-            <tr>
-                <th>ID</th>
-                <th>Category Name</th>
-                <th>Awards</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if(isset($categories[0]))
-            @foreach($categories as $category)
-                <tr>
-                    <td>{{ $category->id }}</td>
-                    <td>{{ $category->category_name }}</td>
-                    <td>{{ $category->awards->pluck('name')->implode(', ') }}</td>
-                    <td>
-                        <a href="{{ route('award_category.show', $category->id) }}" class="btn btn-info btn-sm">View</a>
-                        <a href="{{ route('award_category.edit', $category->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('award_category.destroy', $category->id) }}" method="POST" style="display:inline-block;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this category?');">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
-            @endif
-        </tbody>
-    </table>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-dark">
+                    <h4 class="text-white mb-0">
+                        {{ $title }}
+                        <a href="{{ route('award_category.create') }}" class="btn btn-primary" style="float: right;"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add New Blog</a>
+                    </h4>
+                </div>
+                <div class="card-body">
+                    @include('yajra.datatable')
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
