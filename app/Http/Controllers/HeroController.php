@@ -54,14 +54,10 @@ class HeroController extends Controller
 
         DB::beginTransaction();
         try{
-            // Any kind of code.
-            $name = rand().'.'.$request->file('image')->getClientOriginalExtension();
-            $request->file('image')->move(storage_path('app/public/hero_images'), $name);
-            
             Hero::create([
                 'title' => $request->title,
                 'description' => $request->description,
-                'image' => 'hero_images/'.$name
+                'image' => fileUplaod($request->file('image'), 'hero_images')
             ]);
 
             DB::commit();
@@ -107,13 +103,8 @@ class HeroController extends Controller
         try{
             $hero = Hero::findOrFail($id);
             if ($request->hasFile('image')) {
-                if ($hero->image) {
-                    Storage::disk('public')->delete($hero->image);
-                }
-
-                $name = rand().'.'.$request->file('image')->getClientOriginalExtension();
-                $request->file('image')->move(storage_path('app/public/hero_images'), $name);
-                $hero->image = 'hero_images/'.$name;
+                fileDelete($hero->image);
+                $hero->image = fileUplaod($request->file('image'), 'hero_images');
             }
     
             $hero->title = $request->title;
@@ -139,11 +130,7 @@ class HeroController extends Controller
     public function destroy(string $id)
     {
         $hero = Hero::findOrFail($id);
-
-        if ($hero->image) {
-            Storage::disk('public')->delete($hero->image);
-        }
-
+        fileDelete($hero->image);
         $hero->delete();
 
         return redirect()->route('hero.index')->with('success', 'Hero post deleted successfully.');

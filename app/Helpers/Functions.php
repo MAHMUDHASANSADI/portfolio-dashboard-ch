@@ -33,3 +33,15 @@ function pleaseSortMe($query, $order, $orderByQuery)
         });
 }
 
+function fileUplaod($file, $path){
+    $name = rand().'.'.$file->getClientOriginalExtension();
+    $file->move(storage_path('app/public/'.$path), $name);
+    return $path.'/'.$name;
+}
+
+function fileDelete($path){
+    if ($path) {
+        Storage::disk('public')->delete($path);
+    }
+}
+

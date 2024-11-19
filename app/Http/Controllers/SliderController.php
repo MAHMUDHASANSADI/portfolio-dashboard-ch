@@ -52,11 +52,9 @@ class SliderController extends Controller
 
         DB::beginTransaction();
         try{
-            $name = rand().'.'.$request->file('image')->getClientOriginalExtension();
-            $request->file('image')->move(storage_path('app/public/Slider_images'), $name);
             
             Slider::create([
-                'image' => 'Slider_images/'.$name
+                'image' => fileUplaod($request->file('image'), 'Slider_images')
             ]);
 
             DB::commit();
@@ -99,13 +97,8 @@ class SliderController extends Controller
             $slider = Slider::findOrFail($id);
 
             if ($request->hasFile('image')) {
-                if ($slider->image) {
-                    Storage::disk('public')->delete($slider->image);
-                }
-
-                $name = rand().'.'.$request->file('image')->getClientOriginalExtension();
-                $request->file('image')->move(storage_path('app/public/Slider_images'), $name);
-                $slider->image = 'Slider_images/'.$name;
+                fileDelete($slider->image);
+                $slider->image = fileUplaod($request->file('image'), 'Slider_images');
             }
            
             $slider->save();
@@ -129,11 +122,9 @@ class SliderController extends Controller
         DB::beginTransaction();
         try{
             $slider = Slider::findOrFail($id);
-            if ($slider->image) {
-                Storage::disk('public')->delete($slider->image);
-            }
-
+            fileDelete($slider->image);
             $slider->delete();
+
             DB::commit();
             return response()->json([
                 'success' => true,
