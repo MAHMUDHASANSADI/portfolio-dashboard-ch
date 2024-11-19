@@ -1,13 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-use DB,DataTables;
+use DB, DataTables;
 use Illuminate\Http\Request;
 use App\Models\Video;
 
 class VideoController extends Controller
 {
-    
     public function index()
     {
         if (request()->ajax()) {
@@ -15,11 +14,6 @@ class VideoController extends Controller
                 Video::query()
             )
             ->addIndexColumn()
-
-            // ->editColumn('image', function($video){
-            //     return '<img style="height:50px;width:80px;" src="'.asset('storage/'.$video->image).'"/>';
-            // })
-
             ->addColumn('actions', function($video){
                 return view('actions', [
                     'object' => $video,
@@ -42,7 +36,6 @@ class VideoController extends Controller
      */
     public function create()
     {
-        // Return a view to create a new video
         return view('videos.create');
     }
 
@@ -51,18 +44,31 @@ class VideoController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate incoming request
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'url' => 'required|url'
         ]);
 
-        // Create a new video
-        Video::create($request->only('title', 'description', 'url'));
+        DB::beginTransaction();
+        try{
+        
+            //DB work start
+            Video::create($request->only('title', 'description', 'url'));
+            //DB work End
 
-        // Redirect to the videos list with a success message
-        return redirect()->route('video.index')->with('success', 'Video created successfully.');
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Video created successfully.'
+            ]);
+        }catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -70,9 +76,9 @@ class VideoController extends Controller
      */
     public function show(string $id)
     {
-        // Find video by ID and return view with video details
-        $video = Video::findOrFail($id);
-        return view('videos.show', compact('video'));
+        return view('videos.show', [
+            'video' => Video::findOrFail($id)
+        ]);
     }
 
     /**
@@ -80,9 +86,9 @@ class VideoController extends Controller
      */
     public function edit(string $id)
     {
-        // Find video by ID and return view to edit
-        $video = Video::findOrFail($id);
-        return view('videos.edit', compact('video'));
+        return view('videos.edit', [
+            'video' => Video::findOrFail($id)
+        ]);
     }
 
     /**
@@ -90,19 +96,29 @@ class VideoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // Validate incoming request
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'url' => 'required|url'
         ]);
 
-        // Find video and update it
-        $video = Video::findOrFail($id);
-        $video->update($request->only('title', 'description', 'url'));
+        DB::beginTransaction();
+        try{
 
-        // Redirect to the videos list with a success message
-        return redirect()->route('video.index')->with('success', 'Video updated successfully.');
+            Video::findOrFail($id)->update($request->only('title', 'description', 'url'));
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Video Updated successfully.'
+            ]);
+        }catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -110,11 +126,22 @@ class VideoController extends Controller
      */
     public function destroy(string $id)
     {
-        // Find and delete video
-        $video = Video::findOrFail($id);
-        $video->delete();
+        DB::beginTransaction();
+        try{
 
-        // Redirect to the videos list with a success message
-        return redirect()->route('video.index')->with('success', 'Video deleted successfully.');
+            Video::findOrFail($id)->delete();
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Video deleted successfully.'
+            ]);
+        }catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 }

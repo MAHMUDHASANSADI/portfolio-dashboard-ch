@@ -1,0 +1,19 @@
+DB::beginTransaction();
+try{
+
+
+    // Any kind of code.
+
+
+    DB::commit();
+    return response()->json([
+        'success' => true,
+        'message' => ''
+    ]);
+}catch(\Throwable $th){
+    DB::rollback();
+    return response()->json([
+        'success' => false,
+        'message' => $th->getMessage()
+    ]);
+}

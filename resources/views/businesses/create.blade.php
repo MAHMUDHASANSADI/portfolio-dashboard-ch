@@ -19,7 +19,7 @@
         @csrf
         <div class="mb-3">
             <label for="business_category_id" class="form-label">Category</label>
-            <select name="business_category_id" class="form-control" id="business_category_id" required>
+            <select name="business_category_id" class="form-control select2" id="business_category_id" required>
                 @if(isset($categories[0]))
                 @foreach($categories as $key => $category)
                 <option value="{{ $category->id }}">{{ $category->category_name }}</option>

@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <link rel="stylesheet" href="{{ asset('cdn/css/datatables.min.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('cdn/wnoty/wnoty.css') }}"/>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
     <style>
         /* Custom sidebar styling */
@@ -134,13 +138,89 @@
             </div>
         </div>
     </div>
+
+    @include('modals')
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('cdn/js/datatable/pdfmake.min.js') }}"></script>
     <script src="{{ asset('cdn/js/datatable/vfs_fonts.js') }}"></script>
     <script src="{{ asset('cdn/js/datatable/datatables.min.js') }}"></script>
     <script src="{{ asset('cdn/js/datatable/buttons.colVis.min.js') }}"></script>
+    <script src="{{ asset('cdn/wnoty/wnoty.js') }}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     
     @include('yajra.js')
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
+        
+        function Show(title, link, style = '') {
+            $('#modal').modal('show');
+            $('#modal-title').html(title);
+            $('#modal-body').html('<h1 class="text-center"><strong>Please wait...</strong></h1>');
+            $('#modal-dialog').attr('style',style);
+            $.ajax({
+                url: link,
+                type: 'GET',
+                data: {},
+            })
+            .done(function(response) {
+                $('#modal-body').html(response);
+            });
+        }
+
+        function Delete(link) {
+            $.confirm({
+                title: 'Confirm!',
+                content: '<hr><div class="alert alert-danger">Are you sure to delete ?</div><hr>',
+                buttons: {
+                  yes: {
+                    text: 'Yes',
+                    btnClass: 'btn-danger',
+                    action: function(){
+                      $.ajax({
+                        url: link,
+                        type: 'DELETE',
+                        data: {
+                            _token : "{{ csrf_token() }}"
+                        },
+                      })
+                      .done(function(response) {
+                        if(response.success){
+                            reloadDatatable();
+                            notify(response.message, 'success');
+                        }else{
+                          notify('Something went wrong!','danger');
+                        }
+                      })
+                      .fail(function(response){
+                        notify('Something went wrong!','danger');
+                      });
+                    }
+                  },
+                  no: {
+                    text: 'No',
+                    btnClass: 'btn-default',
+                    action: function(){
+                        
+                    }
+                  }
+                }
+            });
+        }
+
+        function notify(message, type) {
+            $.wnoty({
+              message: '<strong class="text-'+(type)+'">'+(message)+'</strong>',
+              type: type,
+              autohideDelay: 3000
+            });
+        }
+    </script>
 </body>
 </html>

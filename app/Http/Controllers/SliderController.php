@@ -50,13 +50,27 @@ class SliderController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $imagePath = $request->file('image')->store('Slider_images', 'public');
+        DB::beginTransaction();
+        try{
+            $name = rand().'.'.$request->file('image')->getClientOriginalExtension();
+            $request->file('image')->move(storage_path('app/public/Slider_images'), $name);
+            
+            Slider::create([
+                'image' => 'Slider_images/'.$name
+            ]);
 
-        Slider::create([
-            'image' => $imagePath
-        ]);
-
-        return redirect()->route('slider.index')->with('success', 'Slider post created successfully.');
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Slider post created successfully.'
+            ]);
+        }catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 
     
@@ -80,34 +94,57 @@ class SliderController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $slider = Slider::findOrFail($id);
+        DB::beginTransaction();
+        try{
+            $slider = Slider::findOrFail($id);
 
-        if ($request->hasFile('image')) {
-            if ($slider->image) {
-                Storage::disk('public')->delete($slider->image);
+            if ($request->hasFile('image')) {
+                if ($slider->image) {
+                    Storage::disk('public')->delete($slider->image);
+                }
+
+                $name = rand().'.'.$request->file('image')->getClientOriginalExtension();
+                $request->file('image')->move(storage_path('app/public/Slider_images'), $name);
+                $slider->image = 'Slider_images/'.$name;
             }
-
-            $imagePath = $request->file('image')->store('slider_images', 'public');
-            $slider->image = $imagePath;
+           
+            $slider->save();
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Slider post updated successfully.'
+            ]);
+        }catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
         }
-
-       
-        $slider->save();
-
-        return redirect()->route('slider.index')->with('success', 'Slider post updated successfully.');
     }
 
     
     public function destroy(string $id)
     {
-        $slider = Slider::findOrFail($id);
+        DB::beginTransaction();
+        try{
+            $slider = Slider::findOrFail($id);
+            if ($slider->image) {
+                Storage::disk('public')->delete($slider->image);
+            }
 
-        if ($slider->image) {
-            Storage::disk('public')->delete($slider->image);
+            $slider->delete();
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Slider post deleted successfully.'
+            ]);
+        }catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
         }
-
-        $slider->delete();
-
-        return redirect()->route('slider.index')->with('success', 'Slider post deleted successfully.');
     }
 }
