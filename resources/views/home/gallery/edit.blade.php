@@ -1,22 +1,6 @@
-<!-- resources/views/gallerys/edit.blade.php -->
 
-@extends('app')
 
-@section('content')
-<div class="container">
-    <h1>Edit Gallery</h1>
-
-    @if($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    <form action="{{ route('gallery.update', $gallery->id) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('gallery.update', $gallery->id) }}" method="POST" class="crud-form" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="mb-3">
@@ -26,7 +10,6 @@
             <br>
             <img src="{{ asset('storage/' . $gallery->image) }}" alt="Image" width="100">
         </div>
-        <button type="submit" class="btn btn-success">Update Gallery</button>
+        <button type="submit" class="btn btn-success crud-button">Update Gallery</button>
     </form>
-</div>
-@endsection
+@include('crud-js')

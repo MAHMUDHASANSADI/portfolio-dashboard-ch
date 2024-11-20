@@ -56,16 +56,32 @@ class BlogController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $imagePath = $request->file('image')->store('blog_images', 'public');
+        DB::beginTransaction();
+        try{
 
-        Blog::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'date' => $request->date,
-            'image' => $imagePath
-        ]);
+            $imagePath = $request->file('image')->store('blog_images', 'public');
 
-        return redirect()->route('blog.index')->with('success', 'Blog post created successfully.');
+            Blog::create([
+                'title' => $request->title,
+                'description' => $request->description,
+                'date' => $request->date,
+                'image' => $imagePath
+            ]);
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Blog post created successfully.'
+            ]);
+        }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
+
     }
 
     
@@ -92,36 +108,68 @@ class BlogController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $blog = Blog::findOrFail($id);
+        DB::beginTransaction();
+        try{
+            $blog = Blog::findOrFail($id);
 
         if ($request->hasFile('image')) {
             if ($blog->image) {
                 Storage::disk('public')->delete($blog->image);
             }
 
-            $imagePath = $request->file('image')->store('blog_images', 'public');
-            $blog->image = $imagePath;
+                $imagePath = $request->file('image')->store('blog_images', 'public');
+                $blog->image = $imagePath;
+            }
+            $blog->title = $request->title;
+            $blog->description = $request->description;
+            $blog->date = $request->date;
+            $blog->save();
+       
+           
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Blog post updated successfully.'
+            ]);
+        }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
         }
 
-        $blog->title = $request->title;
-        $blog->description = $request->description;
-        $blog->date = $request->date;
-        $blog->save();
-
-        return redirect()->route('blog.index')->with('success', 'Blog post updated successfully.');
     }
 
     
     public function destroy(string $id)
     {
-        $blog = Blog::findOrFail($id);
+        DB::beginTransaction();
+        try{
+            $blog = Blog::findOrFail($id);
 
-        if ($blog->image) {
-            Storage::disk('public')->delete($blog->image);
+            if ($blog->image) {
+                Storage::disk('public')->delete($blog->image);
+            }
+    
+            $blog->delete();
+           
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Blog post deleted successfully.'
+            ]);
         }
-
-        $blog->delete();
-
-        return redirect()->route('blog.index')->with('success', 'Blog post deleted successfully.');
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
+      
     }
 }

@@ -103,34 +103,7 @@
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <div class="navbar-container">
-                    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm py-3 px-4">
-                         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-                        
-                        <!-- Search Button -->
-                        <form class="form-inline my-2 my-lg-0 mx-auto w-50">
-                            <input class="form-control mr-sm-2 w-75" type="search" placeholder="Search" aria-label="Search">
-                                <i class="fas fa-search"></i> <!-- Optional icon for search button -->
-                            </button>
-                        </form>
-
-                        <!-- Notification Icon -->
-                        <ul class="navbar-nav ml-auto">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-bell text-primary"></i> <!-- Notification icon styled -->
-                                    <span class="badge badge-danger badge-pill">3</span> <!-- Rounded notification count badge -->
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsDropdown">
-                                    <h6 class="dropdown-header">Notifications</h6>
-                                    <a class="dropdown-item" href="#">Notification 1</a>
-                                    <a class="dropdown-item" href="#">Notification 2</a>
-                                    <a class="dropdown-item" href="#">Notification 3</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item text-center text-primary" href="#">View All</a>
-                                </div>
-                            </li>
-                        </ul>
-                    </nav>
+                    
             </div>
 
             <div class="container-fluid p-4 bg-light">

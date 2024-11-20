@@ -1,6 +1,4 @@
-@extends('app')
 
-@section('content')
 <div class="container">
     <h1>Award Details</h1>
 
@@ -11,6 +9,5 @@
         </div>
     </div>
 
-    <a href="{{ route('award_category.index') }}" class="btn btn-secondary mt-3">Back to List</a>
 </div>
-@endsection
+@include('crud-js')

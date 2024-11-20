@@ -1,7 +1,4 @@
-{{-- resources/views/businesses/show.blade.php --}}
-@extends('app')
 
-@section('content')
 <div class="container">
     <h1>Business Details</h1>
 
@@ -12,7 +9,5 @@
             <p class="card-text">Description: {{ $business->description }}</p>
         </div>
     </div>
-
-    <a href="{{ route('business.index') }}" class="btn btn-secondary mt-3">Back to List</a>
 </div>
-@endsection
+

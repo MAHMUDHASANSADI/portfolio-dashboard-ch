@@ -68,11 +68,27 @@ class AwardCategoryController extends Controller
             'category_name' => 'required|string|max:255',
         ]);
 
-        AwardCategory::create([
-            'category_name'=>$request->category_name,
-        ]);
+        DB::beginTransaction();
+        try{
 
-        return redirect()->route('award_category.index')->with('success', 'Award category created successfully.');
+            AwardCategory::create([
+                'category_name'=>$request->category_name,
+            ]);
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Award category created successfully'
+            ]);
+        }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
+
     }
 
 
@@ -99,21 +115,52 @@ class AwardCategoryController extends Controller
             'category_name' => 'required|string|max:255',
         ]);
 
-        $award_categories = AwardCategory::findOrFail($id); 
-        $award_categories->update([
-            'category_name'=>$request->category_name,
-        ]);
+        DB::beginTransaction();
+        try{
 
-        return redirect()->route('award_category.index')->with('success', 'Category updated successfully.');
+            $award_categories = AwardCategory::findOrFail($id); 
+            $award_categories->update([
+                'category_name'=>$request->category_name,
+            ]);
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Award category updated successfully'
+            ]);
+        }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
+
     }
 
     
     public function destroy($id)
     {
-        $award_categories = AwardCategory::findOrFail($id); 
-        $award_categories->delete();
+        DB::beginTransaction();
+        try{
+            $award_categories = AwardCategory::findOrFail($id); 
+            $award_categories->delete();
+           
 
-        return redirect()->route('award_category.index')->with('success', 'category deleted successfully.');
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Award category deleted successfully'
+            ]);
+        }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 
 }

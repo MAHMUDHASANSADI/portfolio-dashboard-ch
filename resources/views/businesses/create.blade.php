@@ -1,21 +1,6 @@
-{{-- resources/views/businesses/create.blade.php --}}
-@extends('app')
 
-@section('content')
-<div class="container">
-    <h1>Add New Business</h1>
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    <form action="{{ route('business.store') }}" method="POST">
+    <form action="{{ route('business.store') }}" method="POST" class="crud-form">
         @csrf
         <div class="mb-3">
             <label for="business_category_id" class="form-label">Category</label>
@@ -38,7 +23,7 @@
             <textarea name="description" class="form-control" id="description">{{ old('description') }}</textarea>
         </div>
         <button type="submit" class="btn btn-primary">Save</button>
-        <a href="{{ route('business.index') }}" class="btn btn-secondary">Back to List</a>
+        <a href="{{ route('business.index') }}" class="btn btn-secondary crud-button">Back to List</a>
     </form>
-</div>
-@endsection
+@include('crud-js')
+

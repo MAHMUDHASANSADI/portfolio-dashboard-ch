@@ -49,11 +49,27 @@ class BiographyController extends Controller
         $request->validate([
             'description' => 'nullable|string',
         ]);
-        Biography::create([
-            'description' => $request->description,
-        ]);
 
-        return redirect()->route('biography.index')->with('success', 'Business created successfully.');
+        DB::beginTransaction();
+        try{
+            Biography::create([
+                'description' => $request->description,
+            ]);
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Bography created successfully'
+            ]);
+        }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
+        
     }
 
     
@@ -76,21 +92,51 @@ class BiographyController extends Controller
         $request->validate([
             'description'=>'nullable|string',
         ]);
+        DB::beginTransaction();
+        try{
+            $biography = Biography::findOrFail($id); 
+            $biography->update([
+                'description' => $request->description,
+            ]);
 
-        $biography = Biography::findOrFail($id); // Find business by ID
-        $biography->update([
-            'description' => $request->description,
-        ]);
 
-        return redirect()->route('biography.index')->with('success','biography updated successfully.');
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Bography updated successfully'
+            ]);
+        }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
+
     }
 
     
     public function destroy( $id)
     {
-        $biography = Business::findOrFail($id); // Find business by ID
-        $biography->delete();
+        DB::beginTransaction();
+        try{
+            $biography = Biography::findOrFail($id); 
+            $biography->delete();
 
-        return redirect()->route('biography.index')->with('success', 'biography deleted successfully.');
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Bography updated successfully'
+            ]);
+        }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 }

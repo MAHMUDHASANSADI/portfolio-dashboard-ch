@@ -14,7 +14,7 @@
                 <div class="card-header bg-dark">
                     <h4 class="text-white mb-0">
                         {{ $title }}
-                        <a href="{{ route('biography.create') }}" class="btn btn-primary" style="float: right;"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add New Blog</a>
+                        <a onclick="Show('Add New Biography','{{ route('biography.create') }}')" class="btn btn-primary" style="float: right;cursor: pointer"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add New Biography</a>
                     </h4>
                 </div>
                 <div class="card-body">

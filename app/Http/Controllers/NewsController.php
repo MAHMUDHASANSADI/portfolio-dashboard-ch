@@ -54,16 +54,28 @@ class NewsController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $imagePath = $request->file('image')->store('news_images', 'public');
+        DB::beginTransaction();
+        try{
+            News::create([
+                'title' => $request->title,
+                'description' => $request->description,
+                'date'=>  $request->date,
+                'image' => fileUpload($request->file('image'), 'news_images')
+            ]);
 
-        News::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'date' => $request->date,
-            'image' => $imagePath
-        ]);
-
-        return redirect()->route('news.index')->with('success', 'News post created successfully.');
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'News post created successfully.'
+            ]);
+        }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 
     
@@ -90,35 +102,56 @@ class NewsController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $news = News::findOrFail($id);
-
-        if ($request->hasFile('image')) {
-            if ($news->image) {
-                Storage::disk('public')->delete($news->image);
+        DB::beginTransaction();
+        try{
+            $news = News::findOrFail($id);
+            if ($request->hasFile('image')) {
+                fileDelete($news->image);
+                $news->image = fileUpload($request->file('image'), 'news_images');
             }
+    
+            $news->title = $request->title;
+            $news->description = $request->description;
+            $news->date = $request->date;
+            $news->save();
 
-            $imagePath = $request->file('image')->store('news_images', 'public');
-            $news->image = $imagePath;
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'News post updated successfully.'
+            ]);
         }
-
-        $news->title = $request->title;
-        $news->description = $request->description;
-        $news->date = $request->date;
-        $news->save();
-
-        return redirect()->route('news.index')->with('success', 'news post updated successfully.');
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 
     
     public function destroy(string $id)
     {
-        $news = News::findOrFail($id);
+        try{
+            $news = News::findOrFail($id);
+            fileDelete($news->image);
+            $news->delete();
 
-        if ($news->image) {
-            Storage::disk('public')->delete($news->image);
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'News post deleted successfully.'
+            ]);
+
         }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
 
-        $news->delete();
-         return redirect()->route('news.index')->with('success', 'news post deleted successfully.');
+        }
     }
 }

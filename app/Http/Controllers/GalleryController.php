@@ -52,13 +52,25 @@ class GalleryController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $imagePath = $request->file('image')->store('Gallery_images', 'public');
+        DB::beginTransaction();
+        try{
+            
+            Gallery::create([
+                'image' => fileUpload($request->file('image'), 'Gallery_images')
+            ]);
 
-        Gallery::create([
-            'image' => $imagePath
-        ]);
-
-        return redirect()->route('gallery.index')->with('success', 'Gallery post created successfully.');
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Gallery post created successfully.'
+            ]);
+        }catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 
     
@@ -82,34 +94,50 @@ class GalleryController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $gallery = Gallery::findOrFail($id);
+        DB::beginTransaction();
+        try{
+            $gallery = Gallery::findOrFail($id);
 
-        if ($request->hasFile('image')) {
-            if ($gallery->image) {
-                Storage::disk('public')->delete($gallery->image);
+            if ($request->hasFile('image')) {
+                fileDelete($gallery->image);
+                $gallery->image = fileUpload($request->file('image'), 'Gallery_images');
             }
-
-            $imagePath = $request->file('image')->store('gallery_images', 'public');
-            $gallery->image = $imagePath;
+           
+            $gallery->save();
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Gallery post updated successfully.'
+            ]);
+        }catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
         }
-
-       
-        $gallery->save();
-
-        return redirect()->route('gallery.index')->with('success', 'Gallery post updated successfully.');
     }
 
     
     public function destroy(string $id)
     {
-        $gallery = Gallery::findOrFail($id);
+        DB::beginTransaction();
+        try{
+            $gallery = Gallery::findOrFail($id);
+            fileDelete($gallery->image);
+            $gallery->delete();
 
-        if ($gallery->image) {
-            Storage::disk('public')->delete($gallery->image);
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Gallery post deleted successfully.'
+            ]);
+        }catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
         }
-
-        $gallery->delete();
-
-        return redirect()->route('gallery.index')->with('success', 'Gallery post deleted successfully.');
     }
 }

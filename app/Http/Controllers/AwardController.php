@@ -76,10 +76,25 @@ class AwardController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
+        DB::beginTransaction();
+        try{
 
-        Award::create($request->all());
+            Award::create($request->all());
 
-        return redirect()->route('award.index')->with('success', 'Award created successfully.');
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Award created successfully.'
+            ]);
+        }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
+
     }
 
 
@@ -113,18 +128,49 @@ class AwardController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $award = Award::findOrFail($id)->update($request->all()); // Find award by ID
+        DB::beginTransaction();
+        try{
+            $award = Award::findOrFail($id)->update($request->all()); // Find award by ID
 
-        return redirect()->route('award.index')->with('success', 'Award updated successfully.');
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Award updated successfully.'
+            ]);
+        }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
+
     }
 
     
     public function destroy($id)
     {
-        $award = Award::findOrFail($id); // Find award by ID
-        $award->delete();
+        DB::beginTransaction();
+        try{
+            $award = Award::findOrFail($id); // Find award by ID
+            $award->delete();
 
-        return redirect()->route('award.index')->with('success', 'Award deleted successfully.');
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Award deleted successfully.'
+            ]);
+        }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
+        
     }
 
 }

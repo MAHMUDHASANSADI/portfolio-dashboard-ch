@@ -66,13 +66,10 @@ class BusinessController extends Controller
     {
         return view('businesses.create', [
             'categories' => BusinessCategory::all()
-        ]); // Display create form
+        ]); 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-   // BusinessController.php
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -80,29 +77,41 @@ class BusinessController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
+        DB::beginTransaction();
+        try{
 
-        Business::create($request->all());
+            Business::create($request->all());
 
-        return redirect()->route('business.index')->with('success', 'Business created successfully.');
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Business created successfully'
+            ]);
+        }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
+
     }
 
 
-    /**
-     * Display the specified resource.
-     */
+    
     public function show($id)
     {
         return view('businesses.show', [
             'business' => Business::with([
                 'businessCategory'
             ])->findOrFail($id),
-        ]); // Pass to view
+        ]); 
     }
 
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    
     public function edit($id)
     {
         return view('businesses.edit', [
@@ -112,9 +121,7 @@ class BusinessController extends Controller
     }
 
 
-    /**
-     * Update the specified resource in storage.
-     */
+    
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -122,21 +129,48 @@ class BusinessController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
+        DB::beginTransaction();
+        try{
+            $business = Business::findOrFail($id)->update($request->all()); // Find business by ID
 
-        $business = Business::findOrFail($id)->update($request->all()); // Find business by ID
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Business updated successfully.'
+            ]);
+        }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
 
-        return redirect()->route('business.index')->with('success', 'Business updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    
     public function destroy($id)
     {
-        $business = Business::findOrFail($id); // Find business by ID
-        $business->delete();
+        DB::beginTransaction();
+        try{
 
-        return redirect()->route('business.index')->with('success', 'Business deleted successfully.');
+            $business = Business::findOrFail($id); // Find business by ID
+            $business->delete();
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Business deleted successfully.'
+            ]);
+        }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
+       
     }
 
 }
