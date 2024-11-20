@@ -20,3 +20,5 @@ Route::get('gallery',[APIController::class,'gallery']);
 Route::get('slider',[APIController::class,'slider']);
 Route::get('program',[APIController::class,'program']);
 Route::get('news',[APIController::class,'news']);
+
+Route::post('contact-us', [APIController::class,'contactUs']);

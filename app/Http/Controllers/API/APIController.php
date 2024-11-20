@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Illuminate\Http\Request, DB;
 
 use \App\Models\BusinessCategory;
 use App\Models\AwardCategory;
@@ -17,6 +17,8 @@ use App\Models\Program;
 use App\Models\Slider;
 use App\Models\User;
 use App\Models\Video;
+use App\Models\Message;
+
 class APIController extends Controller
 {
     public function businessCategories(){
@@ -85,5 +87,41 @@ class APIController extends Controller
     public function slider(){
         $sliders=Slider::all();
         return response()->json($sliders,200);
+    }
+
+
+    public function contactUs(Request $request){
+        $validator = \Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|email',
+            'phone' => 'required',
+            'subject' => 'required|min:5',
+            'message' => 'required|min:10',
+        ]);
+
+        if ($validator->passes()) {
+            DB::beginTransaction();
+            try{
+                
+                Message::create($request->all());
+
+                DB::commit();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Your message has been saved successfuly.'
+                ], 200);
+            }catch(\Throwable $th){
+                DB::rollback();
+                return response()->json([
+                    'success' => false,
+                    'message' => $th->getMessage()
+                ], 500);
+            }
+        }
+
+        return response()->json([
+            'success' => false,
+            'errors' => $validator->errors()->all()
+        ], 422);
     }
 }

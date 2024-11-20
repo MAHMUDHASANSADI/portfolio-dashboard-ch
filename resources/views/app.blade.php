@@ -89,7 +89,8 @@
                 <a href="{{ route('award.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-award me-2"></i> Award & Honor</a>
                 <a href="{{ route('blog.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-blog me-2"></i> Blog</a>
                 <a href="{{ route('video.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-video me-2"></i> Video</a>
-                <!-- <a href="{{ route('register') }}" class="ml-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Register</a> -->
+                <a href="{{ route('messages.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-envelope me-2"></i> Messages</a>
+                <a href="{{ route('change-password.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-key me-2"></i> Change Password</a>
 
                 <form method="POST" action="{{ route('logout') }}">
                 @csrf
@@ -126,6 +127,33 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     
     @include('yajra.js')
+
+    @if(session()->has('success'))
+    <script type="text/javascript">
+      $(document).ready(function() {
+        notify('{{session()->get('success')}}', 'success');
+      });
+    </script>
+    @endif
+
+    @if(session()->has('danger'))
+    <script type="text/javascript">
+      $(document).ready(function() {
+        notify('{{session()->get('danger')}}', 'danger');
+      });
+    </script>
+    @endif
+
+    @if($errors->any())
+    <script type="text/javascript">
+      $(document).ready(function() {
+        var errors = <?php echo json_encode($errors->all()); ?>;
+        $.each(errors, function(index, val) {
+          notify(val, 'danger');
+        });
+      });
+    </script>
+    @endif
 
     <script type="text/javascript">
         $(document).ready(function() {
