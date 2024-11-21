@@ -94,7 +94,10 @@ class APIController extends Controller
         $validator = \Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|email',
-            'phone' => 'required',
+            'phone' => [
+            'required',
+            'regex:/^(?:\+88|01)?\d{11}$/',
+        ],
             'subject' => 'required|min:5',
             'message' => 'required|min:10',
         ]);
