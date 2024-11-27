@@ -1,14 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
-use DB, DataTables;
+namespace Modules\Home\App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use App\Models\Slider;
+use Illuminate\Http\Response;
+
+use DB, DataTables;
+use Modules\Home\App\Models\Slider;
 use Illuminate\Support\Facades\Storage;
 
 class SliderController extends Controller
 {
-    
     public function index()
     {
         if (request()->ajax()) {
@@ -31,7 +35,7 @@ class SliderController extends Controller
             ->rawColumns(['image', 'actions'])
             ->toJson();
         }
-        return view('home.slider.index', [
+        return view('home::slider.index', [
             'title' => 'Sliders',
             'headerColumns' => headerColumns('slider')
         ]);
@@ -40,7 +44,7 @@ class SliderController extends Controller
     
     public function create()
     {
-        return view('home.slider.create');
+        return view('home::slider.create');
     }
 
     
@@ -75,14 +79,14 @@ class SliderController extends Controller
     public function show(string $id)
     {
         $slider = Slider::findOrFail($id);
-        return view('home.slider.show', compact('slider'));
+        return view('home::slider.show', compact('slider'));
     }
 
     
     public function edit(string $id)
     {
         $slider = Slider::findOrFail($id);
-        return view('home.slider.edit', compact('slider'));
+        return view('home::slider.edit', compact('slider'));
     }
 
     

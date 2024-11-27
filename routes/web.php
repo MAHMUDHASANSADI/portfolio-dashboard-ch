@@ -43,7 +43,6 @@ Route::middleware('auth')->group(function () {
 
     //git code here
     Route::resource('home', HomeController::class);
-    Route::resource('slider', SliderController ::class);
     Route::resource('hero', HeroController::class);
     Route::resource('gallery', GalleryController::class);
     Route::resource('program', ProgramController::class);
