@@ -1,12 +1,10 @@
 <?php
 
 namespace Modules\Home\App\Http\Controllers;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-
 use DB, DataTables;
 use Modules\Home\App\Models\Slider;
 use Illuminate\Support\Facades\Storage;
