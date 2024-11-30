@@ -9,14 +9,5 @@ use Modules\Home\Database\factories\HeroFactory;
 class Hero extends Model
 {
     use HasFactory;
-
-    /**
-     * The attributes that are mass assignable.
-     */
-    protected $fillable = [];
-    
-    protected static function newFactory(): HeroFactory
-    {
-        //return HeroFactory::new();
-    }
+    protected $fillable = ['title', 'description', 'image'];
 }

@@ -8,15 +8,6 @@ use Modules\Home\Database\factories\NewsFactory;
 
 class News extends Model
 {
-    use HasFactory;
+    protected $fillable = ['title', 'description', 'date', 'image'];
 
-    /**
-     * The attributes that are mass assignable.
-     */
-    protected $fillable = [];
-    
-    protected static function newFactory(): NewsFactory
-    {
-        //return NewsFactory::new();
-    }
 }

@@ -5,63 +5,139 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Modules\Home\App\Models;
+use Modules\Home\App\Models\Gallery;
+use DB,DataTables;
 
 class GalleryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        return view('home::index');
+        if (request()->ajax()) {
+            return DataTables::of(
+                Gallery::query()
+            )
+            ->addIndexColumn()
+
+            ->editColumn('image', function($gallery){
+                return '<img style="height:50px; width:80px;" src="'.asset('storage/'.$gallery->image).'"/>';
+            })
+
+            ->addColumn('actions', function($gallery){
+                return view('actions', [
+                    'object' => $gallery,
+                    'route' => 'gallery',
+                ])->render();
+            })
+            
+            ->rawColumns(['image', 'actions'])
+            ->toJson();
+        }
+        return view('home::gallery.index', [
+            'title' => 'Gallery',
+            'headerColumns' => headerColumns('gallery')
+        ]);
+    
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    
     public function create()
     {
-        return view('home::create');
+        return view('home::gallery.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request): RedirectResponse
+    
+    public function store(Request $request)
     {
-        //
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        DB::beginTransaction();
+        try{
+            
+            Gallery::create([
+                'image' => fileUpload($request->file('image'), 'Gallery_images')
+            ]);
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Gallery post created successfully.'
+            ]);
+        }catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
+    
+    public function show(string $id)
     {
-        return view('home::show');
+        $gallery = Gallery::findOrFail($id);
+        return view('home::gallery.show', compact('gallery'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
+    
+    public function edit(string $id)
     {
-        return view('home::edit');
+        $gallery = Gallery::findOrFail($id);
+        return view('home::gallery.edit', compact('gallery'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id): RedirectResponse
+    
+    public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        DB::beginTransaction();
+        try{
+            $gallery = Gallery::findOrFail($id);
+
+            if ($request->hasFile('image')) {
+                fileDelete($gallery->image);
+                $gallery->image = fileUpload($request->file('image'), 'Gallery_images');
+            }
+           
+            $gallery->save();
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Gallery post updated successfully.'
+            ]);
+        }catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
+    
+    public function destroy(string $id)
     {
-        //
+        DB::beginTransaction();
+        try{
+            $gallery = Gallery::findOrFail($id);
+            fileDelete($gallery->image);
+            $gallery->delete();
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Gallery post deleted successfully.'
+            ]);
+        }catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 }

@@ -5,63 +5,154 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Modules\Home\App\Models;
+use Modules\Home\App\Models\News;
+use DB, DataTables;
 
 class NewsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        return view('home::index');
+        if (request()->ajax()) {
+            return DataTables::of(
+                News::query()
+            )
+            ->addIndexColumn()
+
+            ->editColumn('image', function($news){
+                return '<img style="height:50px;width:80px;" src="'.asset('storage/'.$news->image).'"/>';
+            })
+
+            ->addColumn('actions', function($news){
+                return view('actions', [
+                    'object' => $news,
+                    'route' => 'news',
+                ])->render();
+            })
+            
+            ->rawColumns(['image', 'actions'])
+            ->toJson();
+        }
+
+        return view('home::news.index', [
+            'title' => 'News',
+            'headerColumns' => headerColumns('news')
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    
     public function create()
     {
-        return view('home::create');
+        return view('home::news.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request): RedirectResponse
+    
+    public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'date' => 'required|date',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        DB::beginTransaction();
+        try{
+            News::create([
+                'title' => $request->title,
+                'description' => $request->description,
+                'date'=>  $request->date,
+                'image' => fileUpload($request->file('image'), 'news_images')
+            ]);
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'News post created successfully.'
+            ]);
+        }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
+    
+    public function show(string $id)
     {
-        return view('home::show');
+        $news = News::findOrFail($id);
+        return view('home::news.show', compact('news'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
+    
+    public function edit(string $id)
     {
-        return view('home::edit');
+        $news = News::findOrFail($id);
+        return view('home::news.edit', compact('news'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id): RedirectResponse
+    
+    public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'date' => 'required|date',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        DB::beginTransaction();
+        try{
+            $news = News::findOrFail($id);
+            if ($request->hasFile('image')) {
+                fileDelete($news->image);
+                $news->image = fileUpload($request->file('image'), 'news_images');
+            }
+    
+            $news->title = $request->title;
+            $news->description = $request->description;
+            $news->date = $request->date;
+            $news->save();
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'News post updated successfully.'
+            ]);
+        }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
+    
+    public function destroy(string $id)
     {
-        //
-    }
+        try{
+            $news = News::findOrFail($id);
+            fileDelete($news->image);
+            $news->delete();
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'News post deleted successfully.'
+            ]);
+
+        }
+        catch(\Throwable $th){
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+
+        }
+    }  
 }
