@@ -1,0 +1,11 @@
+{
+    "name": "BusinessCategory",
+    "alias": "businesscategory",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\BusinessCategory\\App\\Providers\\BusinessCategoryServiceProvider"
+    ],
+    "files": []
+}

@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
-use DB, DataTables;
-use Illuminate\Http\Request;
-use App\Models\Business;
-use App\Models\BusinessCategory;
+namespace Modules\BusinessCategory\App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Modules\BusinessCategory\App\Models\BusinessCategory;
+use Modules\Business\App\Models\Business;
+use DB,DataTables;
 
 class BusinessCategoryController extends Controller
 {
-    
     public function index()
     {
         if (request()->ajax()) {
@@ -50,7 +52,7 @@ class BusinessCategoryController extends Controller
             ->toJson();
         }
 
-        return view('business_categories.index', [
+        return view('businesscategory::business_categories.index', [
             'title' => 'Business Category',
             'headerColumns' => headerColumns('business-categories')
         ]);
@@ -58,7 +60,7 @@ class BusinessCategoryController extends Controller
     
     public function create()
     {
-        return view('business_categories.create'); // Display create form
+        return view('businesscategory::business_categories.create'); // Display create form
     }
 
     
@@ -95,7 +97,7 @@ class BusinessCategoryController extends Controller
     public function show($id)
     {
         $business_category = BusinessCategory::findOrFail($id); // Find business by ID
-        return view('business_categories.show', compact('business_category')); // Pass to view
+        return view('businesscategory::business_categories.show', compact('business_category')); // Pass to view
     }
 
 
@@ -103,7 +105,7 @@ class BusinessCategoryController extends Controller
     public function edit($id)
     {
         $business_categories = BusinessCategory::findOrFail($id); 
-        return view('business_categories.edit', compact('business_categories')); 
+        return view('businesscategory::business_categories.edit', compact('business_categories')); 
     }
 
 
@@ -161,5 +163,4 @@ class BusinessCategoryController extends Controller
         }
         
     }
-
 }

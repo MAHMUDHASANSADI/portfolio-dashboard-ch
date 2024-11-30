@@ -31,19 +31,12 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
 
     Route::post('/update-user-column-visibilities', [ProfileController::class, 'updateUserColumnVisibilities']);
-
-
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
     //git code here
-    Route::resource('home', HomeController::class);
-    
-    Route::resource('business', BusinessController::class);
-    Route::resource('business_category', BusinessCategoryController::class);
+    Route::resource('home', HomeController::class);   
     Route::resource('award', AwardController::class);
-    Route::resource('award_category', AwardCategoryController::class);
     Route::resource('blog', BlogController::class);
     Route::resource('video', VideoController::class);
     Route::resource('messages', MessageController::class);

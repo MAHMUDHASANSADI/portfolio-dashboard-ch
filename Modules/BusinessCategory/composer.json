@@ -1,0 +1,31 @@
+{
+    "name": "nwidart/businesscategory",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\BusinessCategory\\": "",
+            "Modules\\BusinessCategory\\App\\": "app/",
+            "Modules\\BusinessCategory\\Database\\Factories\\": "database/factories/",
+            "Modules\\BusinessCategory\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\BusinessCategory\\Tests\\": "tests/"
+        }
+    }
+}

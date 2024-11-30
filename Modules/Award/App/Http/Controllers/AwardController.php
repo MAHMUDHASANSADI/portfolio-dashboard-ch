@@ -1,54 +1,55 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\Award\App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use App\Models\Business;
-use \App\Models\BusinessCategory;
-use DB, DataTables;
+use Illuminate\Http\Response;
+use Modules\Award\App\Models\Award;
+use Modules\AwardCategory\App\Models\AwardCategory;
+use DB,DataTables;
 
-class BusinessController extends Controller
+class AwardController extends Controller
 {
-    
     public function index()
-    {
-        if (request()->ajax()) {
+        {if (request()->ajax()) {
             return DataTables::of(
-                Business::with([
-                    'businessCategory',
+                Award::with([
+                    'awardCategory',
                 ])
             )
             ->addIndexColumn()
 
-            ->addColumn('category', function($business){
-                return $business->businessCategory ? $business->businessCategory->category_name : '';
+            ->addColumn('category', function($award){
+                return $award->awardCategory ? $award->awardCategory->category_name : '';
             })
             ->filterColumn('category', function($query, $keyword){
-                return $query->whereHas('businessCategory', function($query) use($keyword){
+                return $query->whereHas('awardCategory', function($query) use($keyword){
                     return $query->where('category_name', 'LIKE', '%'.$keyword.'%');
                 });
             })
             ->orderColumn('category', function ($query, $order) {
-                return pleaseSortMe($query, $order, BusinessCategory::select('business_categories.category_name')
-                    ->whereColumn('business_categories.id', 'businesses.business_category_id')
+                return pleaseSortMe($query, $order, AwardCategory::select('award_categories.category_name')
+                    ->whereColumn('award_categories.id', 'awards.award_category_id')
                     ->take(1)
                 );
             })
 
-            ->addColumn('business_name', function($business){
-                return $business->name;
+            ->addColumn('award_name', function($award){
+                return $award->name;
             })
-            ->filterColumn('business_name', function($query, $keyword){
+            ->filterColumn('award_name', function($query, $keyword){
                 return $query->where('name', 'LIKE', '%'.$keyword.'%');
             })
-            ->orderColumn('business_name', function ($query, $order) {
+            ->orderColumn('award_name', function ($query, $order) {
                 return $query->orderBy('name', $order);
             })
 
-            ->addColumn('actions', function($business){
+            ->addColumn('actions', function($award){
                 return view('actions', [
-                    'object' => $business,
-                    'route' => 'business',
+                    'object' => $award,
+                    'route' => 'award',
                 ])->render();
             })
             
@@ -56,16 +57,16 @@ class BusinessController extends Controller
             ->toJson();
         }
 
-        return view('businesses.index', [
-            'title' => 'Business',
-            'headerColumns' => headerColumns('business')
+        return view('award::awards.index', [
+            'title' => 'Award',
+            'headerColumns' => headerColumns('award')
         ]);
     }
     
     public function create()
     {
-        return view('businesses.create', [
-            'categories' => BusinessCategory::all()
+        return view('award::awards.create', [
+            'categories' => AwardCategory::all()
         ]); 
     }
 
@@ -73,20 +74,19 @@ class BusinessController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'business_category_id' => 'required',
+            'award_category_id' => 'required',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
         DB::beginTransaction();
         try{
 
-            Business::create($request->all());
-
+            Award::create($request->all());
 
             DB::commit();
             return response()->json([
                 'success' => true,
-                'message' => 'Business created successfully'
+                'message' => 'Award created successfully.'
             ]);
         }
         catch(\Throwable $th){
@@ -100,12 +100,12 @@ class BusinessController extends Controller
     }
 
 
-    
+   
     public function show($id)
     {
-        return view('businesses.show', [
-            'business' => Business::with([
-                'businessCategory'
+        return view('award::awards.show', [
+            'award' => Award::with([
+                'awardCategory'
             ])->findOrFail($id),
         ]); 
     }
@@ -114,10 +114,10 @@ class BusinessController extends Controller
     
     public function edit($id)
     {
-        return view('businesses.edit', [
-            'business' => Business::findOrFail($id),
-            'categories' => BusinessCategory::all()
-        ]); // Pass to edit form
+        return view('award::awards.edit', [
+            'award' => Award::findOrFail($id),
+            'categories' => AwardCategory::all()
+        ]);
     }
 
 
@@ -125,18 +125,20 @@ class BusinessController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'business_category_id' => 'required',
+            'award_category_id' => 'required',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
+
         DB::beginTransaction();
         try{
-            $business = Business::findOrFail($id)->update($request->all()); // Find business by ID
+            $award = Award::findOrFail($id)->update($request->all()); // Find award by ID
+
 
             DB::commit();
             return response()->json([
                 'success' => true,
-                'message' => 'Business updated successfully.'
+                'message' => 'Award updated successfully.'
             ]);
         }
         catch(\Throwable $th){
@@ -154,13 +156,13 @@ class BusinessController extends Controller
     {
         DB::beginTransaction();
         try{
+            $award = Award::findOrFail($id); // Find award by ID
+            $award->delete();
 
-            $business = Business::findOrFail($id); // Find business by ID
-            $business->delete();
             DB::commit();
             return response()->json([
                 'success' => true,
-                'message' => 'Business deleted successfully.'
+                'message' => 'Award deleted successfully.'
             ]);
         }
         catch(\Throwable $th){
@@ -170,7 +172,6 @@ class BusinessController extends Controller
                 'message' => $th->getMessage()
             ]);
         }
-       
+        
     }
-
 }

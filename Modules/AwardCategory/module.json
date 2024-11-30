@@ -1,0 +1,11 @@
+{
+    "name": "AwardCategory",
+    "alias": "awardcategory",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\AwardCategory\\App\\Providers\\AwardCategoryServiceProvider"
+    ],
+    "files": []
+}

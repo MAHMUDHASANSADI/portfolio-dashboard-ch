@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Business\App\Http\Controllers\BusinessController;
+use Modules\Award\App\Http\Controllers\AwardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,5 +15,5 @@ use Modules\Business\App\Http\Controllers\BusinessController;
 */
 
 Route::middleware('auth')->group(function () {
-    Route::resource('business', BusinessController::class);
+    Route::resource('award', AwardController::class);
 });

@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace Modules\BusinessCategory\App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Modules\BusinessCategory\Database\factories\BusinessCategoryFactory;
+use Modules\Business\App\Models\Business;
 
 class BusinessCategory extends Model
 {

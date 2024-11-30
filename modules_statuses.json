@@ -2,5 +2,8 @@
     "Home": true,
     "Business": true,
     "Biographies": true,
-    "Biography": true
+    "Biography": true,
+    "BusinessCategory": true,
+    "AwardCategory": true,
+    "Award": true
 }
