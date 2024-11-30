@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Blog\App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Blog\Database\factories\BlogFactory;
 
 class Blog extends Model
 {
-    use HasFactory;
     protected $fillable = ['title', 'description', 'date', 'image'];
 
 }

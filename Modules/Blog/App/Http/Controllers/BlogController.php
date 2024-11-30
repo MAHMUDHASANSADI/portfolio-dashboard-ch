@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
-use DB, DataTables;
+namespace Modules\Blog\App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use App\Models\Blog;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Response;
+use Modules\Blog\App\Models\Blog;
+use DB, DataTables;
 
 class BlogController extends Controller
 {
-    
     public function index()
     {
         if (request()->ajax()) {
@@ -32,18 +34,15 @@ class BlogController extends Controller
             ->toJson();
         }
 
-        return view('blogs.index', [
+        return view('blog::blogs.index', [
             'title' => 'Blogs',
             'headerColumns' => headerColumns('blogs')
         ]);
     }
 
-   
-
-    
     public function create()
     {
-        return view('blogs.create');
+        return view('blog::blogs.create');
     }
 
     
@@ -88,14 +87,14 @@ class BlogController extends Controller
     public function show(string $id)
     {
         $blog = Blog::findOrFail($id);
-        return view('blogs.show', compact('blog'));
+        return view('blog::blogs.show', compact('blog'));
     }
 
     
     public function edit(string $id)
     {
         $blog = Blog::findOrFail($id);
-        return view('blogs.edit', compact('blog'));
+        return view('blog::blogs.edit', compact('blog'));
     }
 
     

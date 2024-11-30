@@ -36,8 +36,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     //git code here
     Route::resource('home', HomeController::class);   
-    Route::resource('award', AwardController::class);
-    Route::resource('blog', BlogController::class);
     Route::resource('video', VideoController::class);
     Route::resource('messages', MessageController::class);
     Route::resource('change-password', ChangePasswordController::class);

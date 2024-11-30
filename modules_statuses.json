@@ -5,5 +5,8 @@
     "Biography": true,
     "BusinessCategory": true,
     "AwardCategory": true,
-    "Award": true
+    "Award": true,
+    "Blog": true,
+    "Video": true,
+    "Message": true
 }
