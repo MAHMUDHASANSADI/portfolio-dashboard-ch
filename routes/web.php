@@ -2,16 +2,6 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-
-use App\Http\Controllers\BiographyController;
-use App\Http\Controllers\BusinessController;
-use App\Http\Controllers\BusinessCategoryController;
-use App\Http\Controllers\AwardController;
-use App\Http\Controllers\AwardCategoryController;
-use App\Http\Controllers\BlogController;
-use App\Http\Controllers\VideoController;
-use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ChangePasswordController;
 
 
@@ -35,9 +25,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     //git code here
-    Route::resource('home', HomeController::class);   
-    Route::resource('video', VideoController::class);
-    Route::resource('messages', MessageController::class);
     Route::resource('change-password', ChangePasswordController::class);
 });
 
