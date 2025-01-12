@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ChangePasswordController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\HeroController;
@@ -16,9 +18,6 @@ use App\Http\Controllers\AwardCategoryController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\MessageController;
-use App\Http\Controllers\ChangePasswordController;
-use App\Http\Controllers\PermissionController;
-
 
 Route::get('/', function () {
     return redirect('dashboard');
@@ -37,12 +36,9 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
 
     Route::post('/update-user-column-visibilities', [ProfileController::class, 'updateUserColumnVisibilities']);
-
-
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
     //git code here
     Route::resource('permissions', PermissionController::class);
     Route::resource('home', HomeController::class);

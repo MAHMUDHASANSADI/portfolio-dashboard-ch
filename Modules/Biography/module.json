@@ -1,0 +1,11 @@
+{
+    "name": "Biography",
+    "alias": "biography",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Biography\\App\\Providers\\BiographyServiceProvider"
+    ],
+    "files": []
+}
