@@ -7,6 +7,7 @@ use Spatie\Permission\Models\Permission;
 use DB, DataTables;
 use Dotenv\Util\Str;
 
+
 class PermissionController extends Controller
 {
     public function index()
@@ -22,6 +23,7 @@ class PermissionController extends Controller
                     'route' => 'permissions',
                 ])->render();
             })
+            
             
             ->rawColumns(['actions'])
             ->toJson();
