@@ -88,6 +88,12 @@ function headerColumns($key = ''){
             ['subject', 'subject', 'text-center'],
             ['message', 'message', 'text-center'],
         ],
+        'permission' => [
+            ['SL', 'SL'],
+            ['name', 'name', 'text-center'],
+            ['guard_name', 'guard_name', 'text-center'],
+            ['actions', 'actions', 'text-center'],
+        ],
     ];
 
     return isset($columns[$key]) ? $columns[$key] : array(['SL', 'SL', 'text-center']);

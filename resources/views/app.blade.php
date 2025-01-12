@@ -69,6 +69,7 @@
                 <img src="{{ asset('/storage/blog_images/chairman.png') }}" alt="" style="width: 220px; height: 50px;">
             </div>
             <div class="list-group list-group-flush">
+                <a href="{{route('permissions.index')}}" class="list-group-item list-group-item-action"><i class="fas fa-user me-2"></i>Permissions</a>
                 <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="collapse" data-bs-target="#homeSubmenu" aria-expanded="false">
                     <i class="fas fa-home me-2"></i> Home
                 </a> 

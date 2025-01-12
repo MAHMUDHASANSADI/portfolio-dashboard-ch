@@ -17,15 +17,17 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ChangePasswordController;
+use App\Http\Controllers\PermissionController;
 
 
 Route::get('/', function () {
     return redirect('dashboard');
 });
 
-Route::get('/login', function () {
-    return 'Hello';
-});
+// Route::get('/login', function () {
+//     return 'Hello';
+// });
+
 
 
 Route::get('/dashboard', function () {
@@ -42,6 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     //git code here
+    Route::resource('permissions', PermissionController::class);
     Route::resource('home', HomeController::class);
     Route::resource('slider', SliderController ::class);
     Route::resource('hero', HeroController::class);
