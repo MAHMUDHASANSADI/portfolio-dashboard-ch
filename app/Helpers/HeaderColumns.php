@@ -94,6 +94,11 @@ function headerColumns($key = ''){
             ['guard_name', 'guard_name', 'text-center'],
             ['actions', 'actions', 'text-center'],
         ],
+        'role' => [
+            ['SL', 'SL'],
+            ['name', 'name', 'text-center'],
+            ['actions', 'actions', 'text-center'],
+        ]
     ];
 
     return isset($columns[$key]) ? $columns[$key] : array(['SL', 'SL', 'text-center']);

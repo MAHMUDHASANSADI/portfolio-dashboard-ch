@@ -3,24 +3,28 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use DB, DataTables;
 use Dotenv\Util\Str;
 
 
-class PermissionController extends Controller
+class RoleController extends Controller
 {
     public function index()
     {
         if (request()->ajax()) {
             return DataTables::of(
-                Permission::query()
+                Role::query()
             )
             ->addIndexColumn()
-            ->addColumn('actions', function($permission){
-                return view('actions', [
-                    'object' => $permission,
-                    'route' => 'permissions',
+            ->addColumn('actions', function($role){
+                
+                return 
+                
+                '<a href="'.url('permission').'?role_id='.$role->id.'" class="btn btn-success btn-sm">Permission </a>'.view('actions', [
+                    'object' => $role,
+                    'route' => 'roles',
                 ])->render();
             })
             
@@ -28,15 +32,15 @@ class PermissionController extends Controller
             ->rawColumns(['actions'])
             ->toJson();
         }
-        return view('role-permission.permission.index', [
-            'title' => 'Permission',
-            'headerColumns' => headerColumns('permission')
+        return view('role-permission.role.index', [
+            'title' => 'Role',
+            'headerColumns' => headerColumns('role')
         ]);
     }
 
     public function create()
     {
-        return view('role-permission.permission.create');
+        return view('role-permission.role.create');
     }
 
     public function store(Request $request)
@@ -45,6 +49,7 @@ class PermissionController extends Controller
             'name' => [
                 'required',
                 'string',
+                'unique:roles,name'
             ]
         ]);
 
@@ -53,10 +58,10 @@ class PermissionController extends Controller
         DB::beginTransaction();
         try {
             foreach ($names as $name) {
-                if (Permission::where('name', $name)->exists()) {
+                if (Role::where('name', $name)->exists()) {
                     throw new \Exception("The name '{$name}' already exists.");
                 }
-                Permission::create([
+                Role::create([
                     'name' => $name,
                 ]);
             }
@@ -65,7 +70,7 @@ class PermissionController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Permissions created successfully',
+                'message' => 'Roles created successfully',
             ]);
         }
         catch (\Throwable $th) {
@@ -80,16 +85,16 @@ class PermissionController extends Controller
 
     public function show(string $id)
     {
-        return view('role-permission.permission.show', [
-            'permission' => Permission::findOrFail($id)
+        return view('role-permission.role.show', [
+            'role' => Role::findOrFail($id)
         ]);
     }
 
 
     public function edit(String $id)
     {
-        return view('role-permission.permission.edit', [
-            'permission' => Permission::findOrFail($id)
+        return view('role-permission.role.edit', [
+            'role' => Role::findOrFail($id)
         ]);
     }
 
@@ -99,6 +104,7 @@ class PermissionController extends Controller
             'name' => [
                 'required',
                 'string',
+                'unique:roles,name'
             ]
         ]);
 
@@ -106,19 +112,19 @@ class PermissionController extends Controller
 
         DB::beginTransaction();
         try {
-            // foreach ($names as $name) {
-            //     if (Permission::where('name', $name)->exists()) {
-            //         throw new \Exception("The name '{$name}' already exists.");
-            //     }
-            Permission::findOrFail($id)->update($request->only('name'));
-
+            foreach ($names as $name) {
+                if (Role::where('name', $name)->exists()) {
+                    throw new \Exception("The name '{$name}' already exists.");
+                }
+            Role::findOrFail($id)->update($request->only('name'));
+            }
             
 
             DB::commit();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Permissions created successfully',
+                'message' => 'Roles created successfully',
             ]);
         }
         catch (\Throwable $th) {
@@ -136,12 +142,12 @@ class PermissionController extends Controller
         DB::beginTransaction();
         try{
 
-            Permission::findOrFail($id)->delete();
+            Role::findOrFail($id)->delete();
 
             DB::commit();
             return response()->json([
                 'success' => true,
-                'message' => 'Permission deleted successfully.'
+                'message' => 'Roles deleted successfully.'
             ]);
         }catch(\Throwable $th){
             DB::rollback();
@@ -150,5 +156,10 @@ class PermissionController extends Controller
                 'message' => $th->getMessage()
             ]);
         }
+    }
+
+    public function addRoletoPermission(Request $request, string $id)
+    {
+
     }
 }
