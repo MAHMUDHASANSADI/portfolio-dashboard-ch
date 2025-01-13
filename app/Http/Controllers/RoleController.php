@@ -22,7 +22,7 @@ class RoleController extends Controller
                 
                 return 
                 
-                '<a href="'.url('permission').'?role_id='.$role->id.'" class="btn btn-success btn-sm">Permission </a>'.view('actions', [
+                '<a href="'.url('role-permissions').'?role_id='.$role->id.'" class="btn btn-success btn-sm">Permission </a>'.view('actions', [
                     'object' => $role,
                     'route' => 'roles',
                 ])->render();

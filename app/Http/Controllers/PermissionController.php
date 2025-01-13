@@ -36,7 +36,11 @@ class PermissionController extends Controller
 
     public function create()
     {
-        return view('role-permission.permission.create');
+        $data = [
+            'modules' =>Permission::groupBy('module')->pluck('module')->toArray(),
+        ];
+    
+        return view('role-permission.permission.create', $data);
     }
 
     public function store(Request $request)
@@ -46,6 +50,7 @@ class PermissionController extends Controller
                 'required',
                 'string',
             ]
+
         ]);
 
         $names = array_map('trim', explode(',', $request->name));
@@ -58,6 +63,8 @@ class PermissionController extends Controller
                 }
                 Permission::create([
                     'name' => $name,
+                    'module' => trim($request->module),
+                    'guard_name' => 'web'
                 ]);
             }
 
@@ -106,13 +113,12 @@ class PermissionController extends Controller
 
         DB::beginTransaction();
         try {
-            // foreach ($names as $name) {
-            //     if (Permission::where('name', $name)->exists()) {
-            //         throw new \Exception("The name '{$name}' already exists.");
-            //     }
+            foreach ($names as $name) {
+                if (Permission::where('name', $name)->exists()) {
+                    throw new \Exception("The name '{$name}' already exists.");
+                }
             Permission::findOrFail($id)->update($request->only('name'));
-
-            
+            } 
 
             DB::commit();
 

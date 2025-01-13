@@ -90,6 +90,7 @@ function headerColumns($key = ''){
         ],
         'permission' => [
             ['SL', 'SL'],
+            ['module', 'module', 'text-center'],
             ['name', 'name', 'text-center'],
             ['guard_name', 'guard_name', 'text-center'],
             ['actions', 'actions', 'text-center'],

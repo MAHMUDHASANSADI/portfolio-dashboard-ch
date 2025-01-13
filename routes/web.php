@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\RolePermissionController;
 
 Route::get('/', function () {
     return redirect('dashboard');
@@ -23,6 +24,7 @@ Route::middleware('auth')->group(function () {
     //git code here
     Route::resource('permissions', PermissionController::class);
     Route::resource('roles', RoleController::class);
+    Route::resource('role-permissions', RolePermissionController::class);
     Route::resource('change-password', ChangePasswordController::class);
 });
 

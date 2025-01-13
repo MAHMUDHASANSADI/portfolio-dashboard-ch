@@ -12,7 +12,14 @@
     <link rel="stylesheet" href="{{ asset('cdn/wnoty/wnoty.css') }}"/>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    
+    <!-- Include Select2 CSS -->
+    <link rel="stylesheet" href="{{ asset('cdn/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+
+
+    
+
 
     <style>
         /* Custom sidebar styling */
@@ -69,8 +76,17 @@
                 <img src="{{ asset('/storage/blog_images/chairman.png') }}" alt="" style="width: 220px; height: 50px;">
             </div>
             <div class="list-group list-group-flush">
-                <a href="{{route('permissions.index')}}" class="list-group-item list-group-item-action"><i class="fas fa-user me-2"></i>Permissions</a>
-                <a href="{{route('roles.index')}}" class="list-group-item list-group-item-action"><i class="fas fa-user me-2"></i>Roles</a>
+                <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="collapse" data-bs-target="#setupSubmenu" aria-expanded="false">
+                  <i class="fas fa-cog me-2 icon-white"></i> Setup
+                </a>
+                <div class="collapse" id="setupSubmenu">
+                  <div class="list-group" style="width: 220px;">
+                      <a href="{{route('role-permissions.index')}}" class="list-group-item list-group-item-action ms-3"><i class="fas fa-user me-1"></i>Role Permission</a>
+                      <a href="{{route('permissions.index')}}" class="list-group-item list-group-item-action ms-3"><i class="fas fa-user me-2"></i>Permissions</a>
+                      <a href="{{route('roles.index')}}" class="list-group-item list-group-item-action ms-3"><i class="fas fa-user me-2"></i>Roles</a>
+                  </div>
+                </div>
+                
                 <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="collapse" data-bs-target="#homeSubmenu" aria-expanded="false">
                     <i class="fas fa-home me-2"></i> Home
                 </a> 
@@ -124,9 +140,10 @@
     <script src="{{ asset('cdn/js/datatable/datatables.min.js') }}"></script>
     <script src="{{ asset('cdn/js/datatable/buttons.colVis.min.js') }}"></script>
     <script src="{{ asset('cdn/wnoty/wnoty.js') }}"></script>
+    <!-- Include Select2 JS -->
+    <script src="{{ asset('cdn/select2/js/select2.full.min.js') }}"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     
     @include('yajra.js')
 
@@ -158,8 +175,25 @@
     @endif
 
     <script type="text/javascript">
-        $(document).ready(function() {
-            $('.select2').select2();
+        $(".select2").each(function () {
+            $(this).select2({
+                dropdownParent: $(this).parent()
+            });
+        });
+
+        $(".select2bs4").each(function () {
+            $(this).select2({
+                theme: "bootstrap-5",
+                dropdownParent: $(this).parent()
+            });
+        });
+
+        $(".select2bs4-tags").each(function () {
+            $(this).select2({
+                tags: true,
+                theme: "bootstrap-5",
+                dropdownParent: $(this).parent()
+            });
         });
         
         function Show(title, link, style = '') {
