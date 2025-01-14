@@ -12,18 +12,19 @@
     <link rel="stylesheet" href="{{ asset('cdn/wnoty/wnoty.css') }}"/>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.css">
-    
+
     <!-- Include Select2 CSS -->
-    <link rel="stylesheet" href="{{ asset('cdn/select2/css/select2.min.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+{{--    <link rel="stylesheet" href="{{ asset('cdn/select2/css/select2.min.css') }}"> --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-OERcA2utTkIXq3eF7C8JbYWFSnvbweVZP6bB1GiwE6dYzR+PGuBo4Bs7EKN7x09s" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-4-theme@1.1.1/dist/select2-bootstrap4.min.css" rel="stylesheet" />
 
 
-    
 
 
     <style>
         /* Custom sidebar styling */
-        #sidebar-wrapper {  
+        #sidebar-wrapper {
             min-height: 100vh;
             width: 250px;
             background-color: #343a40;
@@ -86,10 +87,10 @@
                       <a href="{{route('roles.index')}}" class="list-group-item list-group-item-action ms-3"><i class="fas fa-user me-2"></i>Roles</a>
                   </div>
                 </div>
-                
+
                 <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="collapse" data-bs-target="#homeSubmenu" aria-expanded="false">
                     <i class="fas fa-home me-2"></i> Home
-                </a> 
+                </a>
                 <!-- Dropdown Submenu -->
                 <div class="collapse" id="homeSubmenu">
                     <div class="list-group " style="width: 220px;">
@@ -112,7 +113,7 @@
 
                 <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                    <a href="route('logout')" class="list-group-item list-group-item-action" 
+                    <a href="route('logout')" class="list-group-item list-group-item-action"
                             onclick="event.preventDefault();
                                         this.closest('form').submit();"> <i class="fas fa-sign-out me-2"></i>{{ __('Log Out') }}
                     </a>
@@ -122,7 +123,7 @@
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <div class="navbar-container">
-                    
+
             </div>
 
             <div class="container-fluid p-4 bg-light">
@@ -140,11 +141,15 @@
     <script src="{{ asset('cdn/js/datatable/datatables.min.js') }}"></script>
     <script src="{{ asset('cdn/js/datatable/buttons.colVis.min.js') }}"></script>
     <script src="{{ asset('cdn/wnoty/wnoty.js') }}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
+
     <!-- Include Select2 JS -->
-    <script src="{{ asset('cdn/select2/js/select2.full.min.js') }}"></script>
+{{--    <script src="{{ asset('cdn/select2/js/select2.full.min.js') }}"></script>--}}
+{{--    <script src="{{ asset('cdn/select2/js/select2.full.js') }}"></script>--}}
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
-    
+
     @include('yajra.js')
 
     @if(session()->has('success'))
@@ -195,7 +200,7 @@
                 dropdownParent: $(this).parent()
             });
         });
-        
+
         function Show(title, link, style = '') {
             $('#modal').modal('show');
             $('#modal-title').html(title);
@@ -244,7 +249,7 @@
                     text: 'No',
                     btnClass: 'btn-default',
                     action: function(){
-                        
+
                     }
                   }
                 }

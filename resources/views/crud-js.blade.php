@@ -1,7 +1,5 @@
 <script type="text/javascript">
     $(document).ready(function() {
-        $('.select2').select2();
-        
         var crud_form = $('.crud-form');
         var crud_button = $('.crud-button');
         var crud_button_content = crud_button.html();
